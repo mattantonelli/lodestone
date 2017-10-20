@@ -1,0 +1,30 @@
+topics:
+  name: 'Topics'
+  url: 'https://na.finalfantasyxiv.com/lodestone/topics'
+  icon: 'https://i.imgur.com/G4f5tuZ.png'
+  thumbnail: 'https://i.imgur.com/VKQnjlp.png'
+  color: 14258475
+
+notices:
+  name: 'Notices'
+  url:  'https://na.finalfantasyxiv.com/lodestone/news/category/1'
+  icon: 'https://i.imgur.com/8SHIFQf.png'
+  color: 13421772
+
+maintenance:
+  name: 'Maintenance'
+  url:  'https://na.finalfantasyxiv.com/lodestone/news/category/2'
+  icon: 'https://i.imgur.com/ELznZeU.png'
+  color: 13413161
+
+updates:
+  name: 'Updates'
+  url:  'https://na.finalfantasyxiv.com/lodestone/news/category/3'
+  icon: 'https://i.imgur.com/jHXnjD5.png'
+  color: 7051581
+
+status:
+  name: 'Status'
+  url:  'https://na.finalfantasyxiv.com/lodestone/news/category/4'
+  icon: 'https://i.imgur.com/fLRURxl.png'
+  color: 10042685
