@@ -38,7 +38,7 @@ module News
       url = "#{BASE_URL}#{item.at_css('a')['href']}"
       id = url.split('/').last
       title = item.at_css('p').text.gsub(/\[.*\]/, '')
-      time = Time.at(item.css('script').text.scan(/\d+/).last.to_i)
+      time = item.css('script').text.scan(/\d+/).last.to_i
 
       { id: id, url: url, title: title, time: format_time(time) }
     end
@@ -49,7 +49,7 @@ module News
       url = "#{BASE_URL}/#{item.at_css('p.news__list--title > a')['href']}"
       id = url.split('/').last
       title = item.at_css('p.news__list--title').text
-      time = Time.at(item.css('script').text.scan(/\d+/).last.to_i)
+      time = item.css('script').text.scan(/\d+/).last.to_i
 
       details = item.at_css('div.news__list--banner')
       image = details.at_css('img')['src']
@@ -60,6 +60,6 @@ module News
   end
 
   def format_time(time)
-    time.strftime('%FT%TZ')
+    Time.at(time).utc.strftime('%FT%TZ')
   end
 end
