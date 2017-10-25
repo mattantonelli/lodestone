@@ -3,6 +3,7 @@ require 'sinatra/json'
 
 require 'open-uri'
 require 'ostruct'
+require 'time'
 require 'yaml'
 
 Dir['lib/*.rb'].each { |file| load file }

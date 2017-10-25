@@ -41,7 +41,7 @@ module Webhooks
       description: post[:description],
       url: post[:url],
       color: category['color'],
-      timestamp: post[:time].strftime('%F %T'),
+      timestamp: post[:time],
       thumbnail: {
         url: category['thumbnail']
       },

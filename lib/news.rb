@@ -1,5 +1,6 @@
 module News
   extend self
+  extend NewsCache
 
   BASE_URL = 'http://na.finalfantasyxiv.com'.freeze
   CATEGORIES = OpenStruct.new(YAML.load_file('config/categories.yml')).freeze
@@ -9,8 +10,14 @@ module News
     category = CATEGORIES[name]
     raise ArgumentError if category.nil?
 
-    page = Nokogiri::HTML(open(category['url']))
-    parse(page, name)
+    if stale?(name)
+      page = Nokogiri::HTML(open(category['url']))
+      news = parse(page, name)
+      cache(news, name)
+      news
+    else
+      cached(name)
+    end
   end
 
   def categories
@@ -19,7 +26,7 @@ module News
 
   private
   def parse(page, type)
-    if type.casecmp?('topics')
+    if type == 'topics'
       parse_topics(page)
     else
       parse_news(page)
@@ -33,7 +40,7 @@ module News
       title = item.at_css('p').text.gsub(/\[.*\]/, '')
       time = Time.at(item.css('script').text.scan(/\d+/).last.to_i)
 
-      { id: id, url: url, title: title, time: time }
+      { id: id, url: url, title: title, time: format_time(time) }
     end
   end
 
@@ -48,7 +55,11 @@ module News
       image = details.at_css('img')['src']
       description = details.css('p').children.first.text
 
-      { id: id, url: url, title: title, time: time, image: image, description: description }
+      { id: id, url: url, title: title, time: format_time(time), image: image, description: description }
     end
+  end
+
+  def format_time(time)
+    time.strftime('%FT%TZ')
   end
 end
