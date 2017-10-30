@@ -16,22 +16,7 @@ Scheduler.run
 
 get '/news/subscribe' do
   cache_control :no_cache
-
-  categories = News.categories.to_h.keys.map(&:to_s)
-
-  subscriptions = categories.each_with_object({}) do |category, h|
-    choice = params[category]
-
-    if choice == '1'
-      Redis.current.sadd("#{category}-webhooks", params['url'])
-      h[category] = true
-    elsif choice == '0'
-      Redis.current.srem("#{category}-webhooks", params['url'])
-      h[category] = false
-    end
-  end
-
-  json(subscriptions: subscriptions)
+  json News.subscribe(params)
 end
 
 get '/news/:category' do

@@ -19,6 +19,24 @@ module News
     end
   end
 
+  def subscribe(params)
+    redis = Redis.current
+
+    CATEGORIES.to_h.keys.map(&:to_s).each_with_object({}) do |category, h|
+      choice = params[category]
+
+      if choice == '1'
+        redis.sadd("#{category}-webhooks", params['url'])
+        h[category] = true
+      elsif choice == '0'
+        redis.srem("#{category}-webhooks", params['url'])
+        h[category] = false
+      else
+        h[category] = redis.sismember("#{category}-webhooks", params['url'])
+      end
+    end
+  end
+
   def categories
     CATEGORIES
   end
