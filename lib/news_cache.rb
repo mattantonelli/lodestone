@@ -12,6 +12,11 @@ module NewsCache
     JSON.parse(Redis.current.hget('news-data', type), symbolize_names: true)
   end
 
+  def headers(type)
+    last_modified = Time.parse(Redis.current.hget('news-timestamps', type))
+    { last_modified: last_modified, expires: last_modified + EXPIRES_IN }
+  end
+
   def stale?(type)
     timestamp = Redis.current.hget('news-timestamps', type)
     cache_time = timestamp ? Time.parse(timestamp) : Time.at(0)

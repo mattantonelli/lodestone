@@ -3,7 +3,7 @@ module Webhooks
 
   def execute(category)
     name = category['name'].downcase
-    new_posts = cache_posts(name, News.fetch(name))
+    new_posts = cache_posts(name, News.fetch(name, true))
     urls = Redis.current.smembers("#{name}-webhooks")
     return new_posts if urls.empty?
 

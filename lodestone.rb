@@ -15,6 +15,8 @@ Redis.current = Redis::Namespace.new(:lodestone)
 Scheduler.run
 
 get '/news/subscribe' do
+  cache_control :no_cache
+
   categories = News.categories.to_h.keys.map(&:to_s)
 
   subscriptions = categories.each_with_object({}) do |category, h|
@@ -33,8 +35,14 @@ get '/news/subscribe' do
 end
 
 get '/news/:category' do
+  category = params[:category].downcase
+
   begin
-    json News.fetch(params[:category])
+    news = News.fetch(category)
+    headers = NewsCache.headers(category)
+    last_modified headers[:last_modified]
+    expires headers[:expires], :must_revalidate
+    json news
   rescue ArgumentError
     halt 400, json(error: 'Invalid news category.')
   end

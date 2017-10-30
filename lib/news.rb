@@ -5,18 +5,17 @@ module News
   BASE_URL = 'http://na.finalfantasyxiv.com'.freeze
   CATEGORIES = OpenStruct.new(YAML.load_file('config/categories.yml')).freeze
 
-  def fetch(type)
-    name = type.downcase
-    category = CATEGORIES[name]
+  def fetch(type, skip_cache = false)
+    category = CATEGORIES[type]
     raise ArgumentError if category.nil?
 
-    if stale?(name)
+    if skip_cache || stale?(type)
       page = Nokogiri::HTML(open(category['url']))
-      news = parse(page, name)
-      cache(news, name)
+      news = parse(page, type)
+      cache(news, type)
       news
     else
-      cached(name)
+      cached(type)
     end
   end
 
