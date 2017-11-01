@@ -16,7 +16,12 @@ Scheduler.run
 
 get '/news/subscribe' do
   cache_control :no_cache
-  json News.subscribe(params)
+
+  begin
+    json News.subscribe(params)
+  rescue ArgumentError
+    halt 400, json(error: 'Invalid webhook URL.')
+  end
 end
 
 get '/news/:category' do

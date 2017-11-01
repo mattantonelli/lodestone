@@ -7,9 +7,25 @@ module Webhooks
     urls = Redis.current.smembers("#{name}-webhooks")
     return new_posts if urls.empty?
 
-    new_posts.each do |post|
-      embed = embed_post(post, category)
-      urls.each { |url| execute_webhook(url, embed) }
+    embeds = new_posts.map do |post|
+      embed_post(post, category)
+    end
+
+    urls.each do |url|
+      Thread.new do
+        embeds.each do |embed|
+          begin
+            RestClient.post(url, { embeds: [embed] }.to_json, { content_type: :json })
+            sleep(1) # Respect rate limit
+          rescue RestClient::ExceptionWithResponse => e
+            # Webhook has been deleted, so halt and remove it from Redis
+            if JSON.parse(e.response)['code'] == 10015
+              Redis.current.srem("#{name}-webhooks", url)
+              break
+            end
+          end
+        end
+      end
     end
   end
 
@@ -23,11 +39,6 @@ module Webhooks
   # Cache any new post IDs for the given category and return the new posts
   def cache_posts(name, posts)
     posts.select { |post| Redis.current.sadd("#{name}-ids", post[:id]) }
-  end
-
-  def execute_webhook(url, embed)
-    RestClient.post(url, { embeds: [embed] }.to_json, { content_type: :json })
-    sleep(3) # Respect rate limit
   end
 
   def embed_post(post, category)

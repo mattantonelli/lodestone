@@ -4,6 +4,7 @@ module News
 
   BASE_URL = 'http://na.finalfantasyxiv.com'.freeze
   CATEGORIES = OpenStruct.new(YAML.load_file('config/categories.yml')).freeze
+  WEBHOOK_URL_FORMAT = /https:\/\/discordapp.com\/api\/webhooks\/\d+\/.*/
 
   def fetch(type, skip_cache = false)
     category = CATEGORIES[type]
@@ -20,19 +21,21 @@ module News
   end
 
   def subscribe(params)
+    url = params['url']
+    raise ArgumentError unless url =~ WEBHOOK_URL_FORMAT
     redis = Redis.current
 
     CATEGORIES.to_h.keys.map(&:to_s).each_with_object({}) do |category, h|
       choice = params[category]
 
       if choice == '1'
-        redis.sadd("#{category}-webhooks", params['url'])
+        redis.sadd("#{category}-webhooks", url)
         h[category] = true
       elsif choice == '0'
-        redis.srem("#{category}-webhooks", params['url'])
+        redis.srem("#{category}-webhooks", url)
         h[category] = false
       else
-        h[category] = redis.sismember("#{category}-webhooks", params['url'])
+        h[category] = redis.sismember("#{category}-webhooks", url)
       end
     end
   end
