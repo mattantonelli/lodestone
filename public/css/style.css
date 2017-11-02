@@ -1,0 +1,26 @@
+body {
+  background: #333;
+  color: #fff;
+}
+
+.card {
+  background: #404040;
+  border: 1px #555 solid;
+}
+
+.card-header {
+  background: #303030;
+  font-weight: bold;
+}
+
+input.form-control, input.form-control:focus {
+  background: #eee;
+}
+
+.form-group > label {
+  font-weight: bold;
+}
+
+.table-bordered td, .table-bordered thead th {
+  border-color: #555;
+}

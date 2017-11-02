@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Lodestone Updates</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/style.css">
+  </head>
+  <body>
+    <div class="container">
+      <% @flash&.each do |type, message| %>
+        <div class="alert alert-<%= type %> mt-2" role="alert">
+          <%= message %>
+        </div>
+      <% end %>
+
+      <h2 class="text-center mt-2">Get Lodestone updates sent to your Discord server!</h2>
+
+      <div class="row mt-4">
+        <div class="col-md-6 offset-md-3">
+          <%= erb :form %>
+        </div>
+      </div>
+
+      <div class="row mt-4">
+        <div class="col-md-8 offset-md-2">
+          <% if @url %>
+            <%= erb :status %>
+          <% else %>
+            <%= erb :webhook %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

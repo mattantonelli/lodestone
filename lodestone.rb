@@ -8,11 +8,26 @@ require 'yaml'
 
 Dir['lib/*.rb'].each { |file| load file }
 
-disable :show_exceptions
-
 Redis.current = Redis::Namespace.new(:lodestone)
 
 Scheduler.run
+
+get '/' do
+  @categories = { topics: '1', notices: '0', maintenance: '1', updates: '1', status: '0' }
+  erb :index
+end
+
+post '/' do
+  @url = params['url']
+  @flash = { success: 'Subscription updated successfully.' }
+  @categories = News.categories.to_h.keys.each_with_object({}) do |category, h|
+    h[category.to_s] = params.dig('categories', category) || '0'
+  end
+
+  News.subscribe(@categories.merge('url' => @url))
+
+  erb :index
+end
 
 get '/news/subscribe' do
   cache_control :no_cache

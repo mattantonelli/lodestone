@@ -1,0 +1,21 @@
+<div class="card">
+  <div class="card-header">
+    Subscription Status
+  </div>
+  <table class="table table-bordered mb-0">
+    <thead>
+      <tr>
+        <% @categories.keys.each do |category| %>
+          <th><%= category.capitalize %></th>
+        <% end %>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <% @categories.values.each do |value| %>
+          <td class="col-md-2"><%= value == '1' ? "\u2713" : "\u2715" %></td>
+        <% end %>
+      </tr>
+    </tbody>
+  </table>
+</div>
