@@ -1,16 +1,24 @@
 require 'sinatra'
 require 'sinatra/json'
+require 'sinatra/custom_logger'
+require 'logger'
 
 require 'open-uri'
 require 'ostruct'
 require 'time'
 require 'yaml'
 
-Dir['lib/*.rb'].each { |file| load file }
+configure do
+  file = File.new("#{settings.root}/log/#{settings.environment}.log", 'a')
+  file.sync = true
+  logger = Logger.new(file)
+  set :logger, logger
+  use Rack::CommonLogger, logger
 
-Redis.current = Redis::Namespace.new(:lodestone)
-
-Scheduler.run
+  Dir['lib/*.rb'].each { |lib| load lib }
+  Redis.current = Redis::Namespace.new(:lodestone)
+  Scheduler.run
+end
 
 get '/' do
   @categories = { topics: '1', notices: '0', maintenance: '1', updates: '1', status: '0' }
@@ -24,6 +32,7 @@ post '/' do
     h[category.to_s] = params.dig('categories', category) || '0'
   end
 
+  logger.info(params)
   News.subscribe(@categories.merge('url' => @url))
 
   erb :index
