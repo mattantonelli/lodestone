@@ -1,1 +1,3 @@
 log/*
+Capfile
+config/deploy*
