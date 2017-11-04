@@ -27,13 +27,17 @@ end
 
 post '/' do
   @url = params['url']
-  @flash = { success: 'Subscription updated successfully.' }
   @categories = News.categories.to_h.keys.each_with_object({}) do |category, h|
     h[category.to_s] = params.dig('categories', category) || '0'
   end
 
-  logger.info(params)
-  News.subscribe(@categories.merge('url' => @url))
+  if params['status']
+    @status = News.subscribe('url' => @url)
+  elsif params['subscribe']
+    logger.info(params)
+    @flash = { success: 'Subscription updated successfully.' }
+    @status = News.subscribe(@categories.merge('url' => @url))
+  end
 
   erb :index
 end

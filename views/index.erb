@@ -4,6 +4,7 @@
     <title>Lodestone Updates</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="shortcut icon" href="images/favicon.ico">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
     <link rel="stylesheet" href="css/style.css">
   </head>
@@ -25,12 +26,16 @@
 
       <div class="row mt-4">
         <div class="col-md-8 offset-md-2">
-          <% if @url %>
+          <% if @status %>
             <%= erb :status %>
           <% else %>
             <%= erb :webhook %>
           <% end %>
         </div>
+      </div>
+
+      <div class="fixed-bottom text-center mb-2">
+        Created by Raelys Skyborn of Behemoth | lodestone@raelys.com
       </div>
     </div>
   </body>
