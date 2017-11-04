@@ -1,6 +1,6 @@
-# Lodestone API
+# Lodestone
 
-Unofficial REST API for the [Final Fantasy XIV Lodestone](https://na.finalfantasyxiv.com/lodestone/).
+Unofficial webhook service and REST API for the [Final Fantasy XIV Lodestone](https://na.finalfantasyxiv.com/lodestone/).
 
 ## Requirements
 * Ruby ~> 2.4.1
@@ -15,9 +15,18 @@ Unofficial REST API for the [Final Fantasy XIV Lodestone](https://na.finalfantas
 
 See the [wiki](https://github.com/mattantonelli/lodestone-api/wiki) for endpoint information.
 
+## Screenshots
+
+##### Webhook form
+
+![Screenshot](https://i.imgur.com/SRt0oH4.png)
+
+##### Webhook example
+
+![Screenshot](https://i.imgur.com/NNO14jL.png)
+
 ---
 
 FINAL FANTASY is a registered trademark of Square Enix Holdings Co., Ltd.
 
 FINAL FANTASY XIV © SQUARE ENIX CO., LTD.
-
