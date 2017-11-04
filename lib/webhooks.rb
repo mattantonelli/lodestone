@@ -35,6 +35,10 @@ module Webhooks
     end
   end
 
+  def send_message(url, message)
+    RestClient.post(url, { content: message })
+  end
+
   private
   # Cache any new post IDs for the given category and return the new posts
   def cache_posts(name, posts)

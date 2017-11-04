@@ -25,7 +25,7 @@ module News
     raise ArgumentError unless url =~ WEBHOOK_URL_FORMAT
     redis = Redis.current
 
-    CATEGORIES.to_h.keys.map(&:to_s).each_with_object({}) do |category, h|
+    status = CATEGORIES.to_h.keys.map(&:to_s).each_with_object({}) do |category, h|
       choice = params[category]
 
       if choice == '1'
@@ -38,6 +38,14 @@ module News
         h[category] = redis.sismember("#{category}-webhooks", url)
       end
     end
+
+    # Send a notification if the webhook is newly subscribed
+    if status.values.any? && !Redis.current.sismember('all-webhooks', url)
+      Webhooks.send_message(url, 'Lodestone updates will now be posted in this channel.')
+      Redis.current.sadd('all-webhooks', url)
+    end
+
+    status
   end
 
   def categories
