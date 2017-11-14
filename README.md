@@ -11,7 +11,9 @@ http://lodestone.raelys.com/
 ## Installation
 1. `git clone https://github.com/mattantonelli/lodestone-api`
 2. `bundle install`
-3. `bundle exec rackup`
+3. `cp config/webhook.yml.example config/webhook.yml`
+    * [Create an app](https://discordapp.com/developers/applications/me) and set these values appropriately
+4. `bundle exec rackup`
 
 ## Usage
 

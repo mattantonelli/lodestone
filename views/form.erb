@@ -1,30 +1,37 @@
-<div class="card">
-  <div class="card-body">
-    <form method="post">
-      <div class="form-group">
-        <label for="webhookUrl">Webhook URL</label>
-        <input type="text" class="form-control" id="webhookUrl" name="url" value="<%= @url %>"
-               pattern="https:\/\/discordapp.com\/api\/webhooks\/\d+\/.*"
-               title="See below for help" required>
-      </div>
+<% unless @code %>
+  <form method="get" action="<%= Webhooks::AUTHORIZE_URL %>">
+    <div class="form-group">
+      <h5>Step 1: Authorize</h5>
 
-      <div class="form-group">
-        <label>Categories</label>
-        <% @categories.each do |category, value| %>
-          <div class="form-check">
-            <label class="form-check-label" for="<%= category %>">
-              <input class="form-check-input" type="checkbox" id="<%= category %>"
-                     name="categories[<%= category %>]" value="1" <%= 'checked' if value == '1' %>>
-              <%= category.capitalize %>
-            </label>
-          </div>
-        <% end %>
-      </div>
+      <input type="hidden" name="response_type" value="code">
+      <input type="hidden" name="client_id" value="<%= Webhooks::CONFIG.client_id %>">
+      <input type="hidden" name="scope" value="webhook.incoming">
+    </div>
 
-      <div class="text-center">
-        <button type="submit" name="status" class="btn btn-info">Status</button>
-        <button type="submit" name="subscribe" class="btn btn-primary">Subscribe</button>
-      </div>
-    </form>
-  </div>
-</div>
+    <div class="text-center">
+      <button type="submit" class="btn btn-primary">Create Webhook</button>
+    </div>
+  </form>
+<% else %>
+  <form method="post" action="/">
+    <div class="form-group">
+      <h5 class="pb-2">Step 2: Customize</h5>
+      <% @categories.each do |category, value| %>
+        <div class="form-check">
+          <label class="form-check-label" for="<%= category %>">
+            <input class="form-check-input" type="checkbox" id="<%= category %>"
+                   name="categories[<%= category %>]" value="1" <%= 'checked' if value == '1' %>>
+            <%= category.capitalize %>
+          </label>
+        </div>
+      <% end %>
+
+      <input type="hidden" name="code" value="<%= @code %>">
+    </div>
+
+    <div class="text-center">
+      <a href="/" class="btn btn-info">Go back</a>
+      <button type="submit" class="btn btn-primary">Subscribe</button>
+    </div>
+  </form>
+<% end %>

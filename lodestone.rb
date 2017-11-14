@@ -22,21 +22,23 @@ end
 
 get '/' do
   @categories = { topics: '1', notices: '0', maintenance: '1', updates: '1', status: '0' }
+  @code = params['code']
   erb :index
 end
 
 post '/' do
-  @url = params['url']
   @categories = News.categories.to_h.keys.each_with_object({}) do |category, h|
     h[category.to_s] = params.dig('categories', category) || '0'
   end
 
-  if params['status']
-    @status = News.subscribe('url' => @url)
-  elsif params['subscribe']
-    logger.info(params)
-    @flash = { success: 'Subscription updated successfully.' }
-    @status = News.subscribe(@categories.merge('url' => @url))
+  begin
+    url = Webhooks.url(params['code'])
+    News.subscribe(@categories.merge('url' => url))
+    @flash = { success: 'You are now subscribed to Lodestone updates.' }
+  rescue Exception => e
+    logger.error "Failed to subscribe - #{e.message}"
+    logger.error e.backtrace.join("\n") unless settings.production?
+    @flash = { danger: 'Sorry, something went wrong. Please try again.' }
   end
 
   erb :index

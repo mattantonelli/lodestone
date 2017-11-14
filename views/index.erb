@@ -21,17 +21,11 @@
 
       <div class="row mt-4">
         <div class="col-md-6 offset-md-3">
-          <%= erb :form %>
-        </div>
-      </div>
-
-      <div class="row mt-4">
-        <div class="col-md-8 offset-md-2">
-          <% if @status %>
-            <%= erb :status %>
-          <% else %>
-            <%= erb :webhook %>
-          <% end %>
+          <div class="card">
+            <div class="card-body">
+              <%= erb :form %>
+            </div>
+          </div>
         </div>
       </div>
 

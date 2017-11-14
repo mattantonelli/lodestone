@@ -1,6 +1,11 @@
 module Webhooks
   extend self
 
+  CONFIG = OpenStruct.new(YAML.load_file('config/webhook.yml')).freeze
+  AUTHORIZE_URL = 'https://discordapp.com/api/oauth2/authorize'.freeze
+  TOKEN_URL = 'https://discordapp.com/api/oauth2/token'.freeze
+  WEBHOOK_URL = 'https://discordapp.com/api/webhooks'.freeze
+
   def execute(category)
     name = category['name'].downcase
     new_posts = cache_posts(name, News.fetch(name, true))
@@ -33,6 +38,17 @@ module Webhooks
     News.categories.to_h.values.each do |category|
       execute(category)
     end
+  end
+
+  # Create a webhook URL using an OAuth code
+  def url(code)
+    response = RestClient.post(TOKEN_URL,
+                               { client_id: CONFIG.client_id, client_secret: CONFIG.client_secret,
+                                 grant_type: 'authorization_code', code: code, redirect_uri: CONFIG.redirect_uri },
+                               { content_type: 'application/x-www-form-urlencoded' })
+
+    webhook = JSON.parse(response, symbolize_names: true)[:webhook]
+    "#{WEBHOOK_URL}/#{webhook[:id]}/#{webhook[:token]}"
   end
 
   def send_message(url, message)
