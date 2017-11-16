@@ -1,6 +1,12 @@
+html {
+  position: relative;
+  min-height: 100%;
+}
+
 body {
   background: #333;
   color: #fff;
+  margin-bottom: 48px;
 }
 
 .card {
@@ -24,3 +30,29 @@ input.form-control, input.form-control:focus {
 .table-bordered td, .table-bordered thead th {
   border-color: #555;
 }
+
+button {
+  cursor: pointer;
+}
+
+h5 {
+  font-weight: bold;
+}
+
+a.link-unstyled {
+  color: #fff;
+  text-decoration: underline;
+}
+
+a.link-unstyled:hover {
+  color: #ccc;
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 48px;
+  line-height: 48px;
+}
+

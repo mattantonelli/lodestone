@@ -1,37 +1,47 @@
 <% unless @code %>
-  <form method="get" action="<%= Webhooks::AUTHORIZE_URL %>">
-    <div class="form-group">
-      <h5>Step 1: Authorize</h5>
-
-      <input type="hidden" name="response_type" value="code">
-      <input type="hidden" name="client_id" value="<%= Webhooks::CONFIG.client_id %>">
-      <input type="hidden" name="scope" value="webhook.incoming">
+  <div class="card">
+    <div class="card-header">
+      Step 1: Authorize
     </div>
+    <div class="card-body">
+      <form method="get" action="<%= Webhooks::AUTHORIZE_URL %>">
+        <input type="hidden" name="response_type" value="code">
+        <input type="hidden" name="client_id" value="<%= Webhooks::CONFIG.client_id %>">
+        <input type="hidden" name="scope" value="webhook.incoming">
 
-    <div class="text-center">
-      <button type="submit" class="btn btn-primary">Create Webhook</button>
-    </div>
-  </form>
-<% else %>
-  <form method="post" action="/">
-    <div class="form-group">
-      <h5 class="pb-2">Step 2: Customize</h5>
-      <% @categories.each do |category, value| %>
-        <div class="form-check">
-          <label class="form-check-label" for="<%= category %>">
-            <input class="form-check-input" type="checkbox" id="<%= category %>"
-                   name="categories[<%= category %>]" value="1" <%= 'checked' if value == '1' %>>
-            <%= category.capitalize %>
-          </label>
+        <div class="text-center">
+          <p>This requires the <b>Manage Webhooks</b> permission.</p>
+          <button type="submit" class="btn btn-primary">Create Webhook</button>
         </div>
-      <% end %>
-
-      <input type="hidden" name="code" value="<%= @code %>">
+      </form>
     </div>
-
-    <div class="text-center">
-      <a href="/" class="btn btn-info">Go back</a>
-      <button type="submit" class="btn btn-primary">Subscribe</button>
+  </div>
+<% else %>
+  <div class="card">
+    <div class="card-header">
+      Step 2: Customize
     </div>
-  </form>
+    <div class="card-body">
+      <form method="post" action="/">
+        <input type="hidden" name="code" value="<%= @code %>">
+
+        <div class="form-group">
+          <% @categories.each do |category, value| %>
+            <div class="form-check">
+              <label class="form-check-label" for="<%= category %>">
+                <input class="form-check-input" type="checkbox" id="<%= category %>"
+                name="categories[<%= category %>]" value="1" <%= 'checked' if value == '1' %>>
+                <%= category.capitalize %>
+              </label>
+            </div>
+          <% end %>
+        </div>
+
+        <div class="text-center">
+          <a href="/" class="btn btn-info">Go back</a>
+          <button type="submit" class="btn btn-primary">Subscribe</button>
+        </div>
+      </form>
+    </div>
+  </div>
 <% end %>

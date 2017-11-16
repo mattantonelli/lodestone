@@ -16,17 +16,19 @@ module Webhooks
       embed_post(post, category)
     end
 
-    urls.each do |url|
-      Thread.new do
-        embeds.each do |embed|
-          begin
-            RestClient.post(url, { embeds: [embed] }.to_json, { content_type: :json })
-            sleep(1) # Respect rate limit
-          rescue RestClient::ExceptionWithResponse => e
-            # Webhook has been deleted, so halt and remove it from Redis
-            if JSON.parse(e.response)['code'] == 10015
-              Redis.current.srem("#{name}-webhooks", url)
-              break
+    urls.each_slice(10) do |slice|
+      slice.each do |url|
+        Thread.new do
+          embeds.each do |embed|
+            begin
+              RestClient.post(url, { embeds: [embed] }.to_json, { content_type: :json })
+              sleep(3) # Respect rate limit
+            rescue RestClient::ExceptionWithResponse => e
+              # Webhook has been deleted, so halt and remove it from Redis
+              if JSON.parse(e.response)['code'] == 10015
+                Redis.current.srem("#{name}-webhooks", url)
+                break
+              end
             end
           end
         end

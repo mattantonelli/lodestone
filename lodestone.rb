@@ -15,6 +15,9 @@ configure do
   set :logger, logger
   use Rack::CommonLogger, logger
 
+  # Cache static assets for one week
+  set :static_cache_control, [:public, max_age: 604_800]
+
   Dir['lib/*.rb'].each { |lib| load lib }
   Redis.current = Redis::Namespace.new(:lodestone)
   Scheduler.run
@@ -69,9 +72,9 @@ get '/news/:category' do
 end
 
 not_found do
-  json(error: 'Resource not found.')
+  erb 'errors/not_found'.to_sym
 end
 
 error do
-  json(error: 'Could not retrieve Lodestone data.')
+  erb 'errors/error'.to_sym
 end

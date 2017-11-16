@@ -17,21 +17,26 @@
         </div>
       <% end %>
 
-      <h2 class="text-center mt-2">Get Lodestone updates sent to your Discord server!</h2>
+      <h2 class="text-center mt-2">Automatic Lodestone updates for your Discord server!</h2>
 
       <div class="row mt-4">
         <div class="col-md-6 offset-md-3">
-          <div class="card">
-            <div class="card-body">
-              <%= erb :form %>
-            </div>
-          </div>
+          <%= erb :form %>
         </div>
       </div>
 
-      <div class="fixed-bottom text-center mb-2">
-        Created by Raelys Skyborn of Behemoth | lodestone@raelys.com
-      </div>
+      <% unless @code %>
+        <div class="row mt-4">
+          <div class="col-md-8 offset-md-2">
+            <%= erb :faq %>
+          </div>
+        </div>
+      <% end %>
+
+    </div>
+
+    <div class="footer text-center">
+      Created by Raelys Skyborn of Behemoth | lodestone@raelys.com
     </div>
   </body>
 </html>
