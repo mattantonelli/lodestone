@@ -21,13 +21,9 @@ See the [wiki](https://github.com/mattantonelli/lodestone-api/wiki) for endpoint
 
 ## Screenshots
 
-##### Webhook form
-
-![Screenshot](https://i.imgur.com/SRt0oH4.png)
-
 ##### Webhook example
 
-![Screenshot](https://i.imgur.com/NNO14jL.png)
+![Screenshot](https://i.imgur.com/mkQJMSx.png)
 
 ---
 
