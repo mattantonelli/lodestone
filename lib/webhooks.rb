@@ -6,39 +6,54 @@ module Webhooks
   TOKEN_URL = 'https://discordapp.com/api/oauth2/token'.freeze
   WEBHOOK_URL = 'https://discordapp.com/api/webhooks'.freeze
 
-  def execute(category)
+  def execute(category, logger)
     name = category['name'].downcase
     new_posts = cache_posts(name, News.fetch(name, true))
     urls = Redis.current.smembers("#{name}-webhooks")
-    return new_posts if urls.empty?
+
+    return new_posts if new_posts.empty? || urls.empty?
+    logger.info("Found #{new_posts.size} new posts for #{name.capitalize}")
+    sent, num_posts = 0, new_posts.size
 
     embeds = new_posts.map do |post|
       embed_post(post, category)
     end
 
     urls.each_slice(10) do |slice|
-      slice.each do |url|
+      threads = slice.map do |url|
         Thread.new do
           embeds.each do |embed|
             begin
               RestClient.post(url, { embeds: [embed] }.to_json, { content_type: :json })
-              sleep(3) # Respect rate limit
+              sent += 1
+              sleep(3) if num_posts > 1 # Respect rate limit
             rescue RestClient::ExceptionWithResponse => e
               # Webhook has been deleted, so halt and remove it from Redis
               if JSON.parse(e.response)['code'] == 10015
                 Redis.current.srem("#{name}-webhooks", url)
+                logger.info("Removing deleted webhook #{url}")
                 break
+              else
+                logger.error("Failed to send \"#{embed[:title]}\" to #{url}")
               end
             end
           end
         end
       end
+
+      # Wait for all threads to complete before continuing
+      ThreadsWait.all_waits(*threads)
     end
+
+    logger.info("Sent #{sent}/#{num_posts * urls.size} updates " \
+                "across #{urls.size} webhooks " \
+                "subscribed to #{name.capitalize}.")
+    new_posts
   end
 
-  def execute_all
+  def execute_all(logger)
     News.categories.to_h.values.each do |category|
-      execute(category)
+      execute(category, logger)
     end
   end
 

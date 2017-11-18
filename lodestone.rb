@@ -6,6 +6,7 @@ require 'logger'
 require 'open-uri'
 require 'ostruct'
 require 'time'
+require 'thwait'
 require 'yaml'
 
 configure do
@@ -20,7 +21,7 @@ configure do
 
   Dir['lib/*.rb'].each { |lib| load lib }
   Redis.current = Redis::Namespace.new(:lodestone)
-  Scheduler.run
+  Scheduler.run(logger)
 end
 
 get '/' do
