@@ -30,11 +30,9 @@ module Webhooks
             rescue RestClient::ExceptionWithResponse => e
               # Webhook has been deleted, so halt and remove it from Redis
               if JSON.parse(e.response)['code'] == 10015
-                Redis.current.srem("#{name}-webhooks", url)
-                logger.info("Removing deleted webhook #{url}")
-                break
+                logger.info("Removing deleted webhook #{url}") if Redis.current.srem("#{name}-webhooks", url)
               else
-                logger.error("Failed to send \"#{embed[:title]}\" to #{url}")
+                logger.error("Failed to send \"#{embed[:title]}\" to #{url} - #{e.message}")
               end
             end
           end
