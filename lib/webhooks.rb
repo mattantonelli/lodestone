@@ -13,7 +13,7 @@ module Webhooks
 
     return new_posts if new_posts.empty? || urls.empty?
     logger.info("Found #{new_posts.size} new posts for #{name.capitalize}")
-    sent, num_posts = 0, new_posts.size
+    sent = removed = 0
 
     embeds = new_posts.map do |post|
       embed_post(post, category)
@@ -24,15 +24,22 @@ module Webhooks
         Thread.new do
           embeds.each do |embed|
             begin
-              RestClient.post(url, { embeds: [embed] }.to_json, { content_type: :json })
+              response = RestClient.post(url, { embeds: [embed] }.to_json, content_type: :json)
               sent += 1
-              sleep(3) if num_posts > 1 # Respect rate limit
+
+              # Respect the dynamic rate limit
+              if response.headers[:x_ratelimit_remaining] == '0'
+                time = response.headers[:x_ratelimit_reset].to_i - Time.now.to_i
+                sleep(time) if time.positive?
+              end
             rescue RestClient::ExceptionWithResponse => e
-              # Webhook has been deleted, so halt and remove it from Redis
               if JSON.parse(e.response)['code'] == 10015
-                logger.info("Removing deleted webhook #{url}") if Redis.current.srem("#{name}-webhooks", url)
+                # Webhook has been deleted, so halt and remove it from Redis
+                removed += 1 if Redis.current.srem("#{name}-webhooks", url)
               else
                 logger.error("Failed to send \"#{embed[:title]}\" to #{url} - #{e.message}")
+                logger.error(e.response.headers)
+                logger.error(e.response.body)
               end
             end
           end
@@ -43,8 +50,10 @@ module Webhooks
       ThreadsWait.all_waits(*threads)
     end
 
-    logger.info("Sent #{sent}/#{num_posts * urls.size} updates " \
-                "across #{urls.size} webhooks " \
+    num_urls = urls.size - removed
+    logger.info("#{removed} #{name.capitalize} webhooks unsubscribed.") if removed > 0
+    logger.info("Sent #{sent}/#{new_posts.size * num_urls} updates " \
+                "across #{num_urls} webhooks " \
                 "subscribed to #{name.capitalize}.")
     new_posts
   end
@@ -52,6 +61,7 @@ module Webhooks
   def execute_all(logger)
     News.categories.to_h.values.each do |category|
       execute(category, logger)
+      sleep(3) # A quick nap to ensure the rate limit buckets reset
     end
   end
 
