@@ -1,11 +1,16 @@
 module Scheduler
   extend self
 
-  def run(logger)
+  def run
     scheduler = Rufus::Scheduler.new(lockfile: 'tmp/.rufus-scheduler.lock')
 
+    def scheduler.on_error(job, error)
+      LodestoneLogger.error(error.inspect)
+      error.backtrace.each { |line| LodestoneLogger.error(line) }
+    end
+
     scheduler.cron('5,35 * * * *') do
-      Webhooks.execute_all(logger)
+      Webhooks.execute_all
     end
   end
 end

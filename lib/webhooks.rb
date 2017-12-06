@@ -6,13 +6,13 @@ module Webhooks
   TOKEN_URL = 'https://discordapp.com/api/oauth2/token'.freeze
   WEBHOOK_URL = 'https://discordapp.com/api/webhooks'.freeze
 
-  def execute(category, logger)
+  def execute(category)
     name = category['name'].downcase
     new_posts = cache_posts(name, News.fetch(name, true))
     urls = Redis.current.smembers("#{name}-webhooks")
 
     return new_posts if new_posts.empty? || urls.empty?
-    logger.info("Found #{new_posts.size} new posts for #{name.capitalize}")
+    LodestoneLogger.info("Found #{new_posts.size} new posts for #{name.capitalize}")
     sent = removed = 0
 
     embeds = new_posts.map do |post|
@@ -37,9 +37,9 @@ module Webhooks
                 # Webhook has been deleted, so halt and remove it from Redis
                 removed += 1 if Redis.current.srem("#{name}-webhooks", url)
               else
-                logger.error("Failed to send \"#{embed[:title]}\" to #{url} - #{e.message}")
-                logger.error(e.response.headers)
-                logger.error(e.response.body)
+                LodestoneLogger.error("Failed to send \"#{embed[:title]}\" to #{url} - #{e.message}")
+                LodestoneLogger.error(e.response.headers)
+                LodestoneLogger.error(e.response.body)
               end
             end
           end
@@ -51,16 +51,16 @@ module Webhooks
     end
 
     num_urls = urls.size - removed
-    logger.info("#{removed} #{name.capitalize} webhooks unsubscribed.") if removed > 0
-    logger.info("Sent #{sent}/#{new_posts.size * num_urls} updates " \
+    LodestoneLogger.info("#{removed} #{name.capitalize} webhooks unsubscribed.") if removed > 0
+    LodestoneLogger.info("Sent #{sent}/#{new_posts.size * num_urls} updates " \
                 "across #{num_urls} webhooks " \
                 "subscribed to #{name.capitalize}.")
     new_posts
   end
 
-  def execute_all(logger)
+  def execute_all
     News.categories.to_h.values.each do |category|
-      execute(category, logger)
+      execute(category)
       sleep(3) # A quick nap to ensure the rate limit buckets reset
     end
   end

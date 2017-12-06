@@ -10,18 +10,19 @@ require 'thwait'
 require 'yaml'
 
 configure do
-  file = File.new("#{settings.root}/log/#{settings.environment}.log", 'a')
-  file.sync = true
-  logger = Logger.new(file)
-  set :logger, logger
-  use Rack::CommonLogger, logger
+  Dir['lib/*.rb'].each { |lib| load lib }
+
+  use Rack::CommonLogger, LodestoneLogger.logger
+  set :logger, LodestoneLogger.logger
+
+  # Do not log requests to STDERR in production
+  set :logging, nil if settings.production?
 
   # Cache static assets for one week
   set :static_cache_control, [:public, max_age: 604_800]
 
-  Dir['lib/*.rb'].each { |lib| load lib }
   Redis.current = Redis::Namespace.new(:lodestone)
-  Scheduler.run(logger)
+  Scheduler.run
 end
 
 get '/' do
