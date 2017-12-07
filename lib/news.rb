@@ -72,7 +72,7 @@ module News
 
   def parse_topics(page)
     page.css('li.news__list--topics').map do |item|
-      url = "#{BASE_URL}/#{item.at_css('p.news__list--title > a')['href']}"
+      url = "#{BASE_URL}#{item.at_css('p.news__list--title > a')['href']}"
       id = url.split('/').last
       title = item.at_css('p.news__list--title').text
       time = item.css('script').text.scan(/\d+/).last.to_i
