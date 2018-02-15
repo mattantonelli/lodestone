@@ -1,4 +1,6 @@
 module Webhooks
+  require_relative 'webhooks_resend.rb'
+
   extend self
   extend WebhooksResend
 

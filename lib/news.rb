@@ -1,4 +1,6 @@
 module News
+  require_relative 'news_cache.rb'
+
   extend self
   extend NewsCache
 

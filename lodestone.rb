@@ -10,7 +10,10 @@ require 'thwait'
 require 'yaml'
 
 configure do
-  Dir['lib/*.rb'].each { |lib| load lib }
+  require_relative 'lib/logger.rb'
+  require_relative 'lib/news.rb'
+  require_relative 'lib/scheduler.rb'
+  require_relative 'lib/webhooks.rb'
 
   use Rack::CommonLogger, LodestoneLogger.logger
   set :logger, LodestoneLogger.logger
