@@ -12,5 +12,9 @@ module Scheduler
     scheduler.cron('5,35 * * * *') do
       Webhooks.execute_all
     end
+
+    scheduler.cron('10,40 * * * *') do
+      WebhooksResend.send_all
+    end
   end
 end
