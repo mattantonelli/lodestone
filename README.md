@@ -13,7 +13,10 @@ http://lodestone.raelys.com/
 2. `bundle install`
 3. `cp config/webhook.yml.example config/webhook.yml`
     * [Create an app](https://discordapp.com/developers/applications/me) and set these values appropriately
-4. `bundle exec rackup`
+4. `cp config/rack_attack.rb.example config/rack_attack.rb`
+    * If you would like to enable rate limiting, configure this file appropriately.
+    More details [here](https://github.com/kickstarter/rack-attack).
+5. `bundle exec rackup`
 
 ## Usage
 

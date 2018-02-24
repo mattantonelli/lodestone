@@ -4,6 +4,7 @@ ruby '~> 2.4.1'
 gem 'sinatra'
 gem 'sinatra-contrib'
 gem 'rack'
+gem 'rack-attack'
 
 gem 'json'
 gem 'nokogiri'

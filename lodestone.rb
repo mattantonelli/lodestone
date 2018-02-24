@@ -10,11 +10,15 @@ require 'thwait'
 require 'yaml'
 
 configure do
+  require_relative 'config/rack_attack.rb'
   require_relative 'lib/cache.rb'
+  require_relative 'lib/characters.rb'
   require_relative 'lib/logger.rb'
   require_relative 'lib/news.rb'
   require_relative 'lib/scheduler.rb'
   require_relative 'lib/webhooks.rb'
+
+  BASE_URL = 'http://na.finalfantasyxiv.com'.freeze
 
   use Rack::CommonLogger, LodestoneLogger.logger
   set :logger, LodestoneLogger.logger
@@ -87,6 +91,17 @@ get '/news/:category' do
     json news
   rescue ArgumentError
     halt 400, json(error: 'Invalid news category.')
+  end
+end
+
+get '/characters' do
+  begin
+    name, world = params.values_at(:name, :world)
+    character = Characters.fetch(name, world)
+    cache_headers :characters, Characters.key(name, world)
+    json character
+  rescue ArgumentError
+    halt 400, json(error: 'Invalid parameters.')
   end
 end
 

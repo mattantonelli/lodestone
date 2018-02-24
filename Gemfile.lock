@@ -38,6 +38,8 @@ GEM
     nokogiri (1.8.1)
       mini_portile2 (~> 2.3.0)
     rack (2.0.3)
+    rack-attack (5.0.1)
+      rack
     rack-protection (2.0.0)
       rack
     rake (12.2.1)
@@ -83,6 +85,7 @@ DEPENDENCIES
   json
   nokogiri
   rack
+  rack-attack
   redis-namespace
   rest-client
   rufus-scheduler

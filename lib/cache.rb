@@ -1,7 +1,7 @@
 module Cache
   extend self
 
-  EXPIRES_IN = { news: 1800 }.freeze
+  EXPIRES_IN = { characters: 21600, news: 1800 }.freeze
 
   def cache(key, field, value)
     Redis.current.hset("#{key}-data", field, value.to_json)

@@ -16,5 +16,9 @@ module Scheduler
     scheduler.cron('10,40 * * * *') do
       WebhooksResend.send_all
     end
+
+    scheduler.cron('0 0 * * *') do
+      Characters.clean
+    end
   end
 end

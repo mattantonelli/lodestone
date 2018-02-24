@@ -1,4 +1,5 @@
 log/*
 Capfile
 config/deploy*
+config/rack_attack.rb
 config/webhook.yml
