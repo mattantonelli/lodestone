@@ -10,6 +10,7 @@ require 'thwait'
 require 'yaml'
 
 configure do
+  require_relative 'lib/cache.rb'
   require_relative 'lib/logger.rb'
   require_relative 'lib/news.rb'
   require_relative 'lib/scheduler.rb'
@@ -82,9 +83,7 @@ get '/news/:category' do
 
   begin
     news = News.fetch(category)
-    headers = NewsCache.headers(category)
-    last_modified headers[:last_modified]
-    expires headers[:expires], :must_revalidate
+    cache_headers :news, category
     json news
   rescue ArgumentError
     halt 400, json(error: 'Invalid news category.')

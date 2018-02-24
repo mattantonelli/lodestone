@@ -1,8 +1,6 @@
 module News
-  require_relative 'news_cache.rb'
-
   extend self
-  extend NewsCache
+  extend Cache
 
   BASE_URL = 'http://na.finalfantasyxiv.com'.freeze
   CATEGORIES = OpenStruct.new(YAML.load_file('config/categories.yml')).freeze
@@ -12,13 +10,13 @@ module News
     category = CATEGORIES[type]
     raise ArgumentError if category.nil?
 
-    if skip_cache || stale?(type)
+    if skip_cache || stale?(:news, type)
       page = Nokogiri::HTML(open(category['url']))
-      news = parse(page, type)
-      cache(news, type)
-      news
+      data = parse(page, type)
+      cache(:news, type, data)
+      data
     else
-      cached(type)
+      cached(:news, type)
     end
   end
 
