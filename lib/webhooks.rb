@@ -9,13 +9,13 @@ module Webhooks
   TOKEN_URL = 'https://discordapp.com/api/oauth2/token'.freeze
   WEBHOOK_URL = 'https://discordapp.com/api/webhooks'.freeze
 
-  def execute(category)
-    name = category['name'].downcase
-    new_posts = cache_posts(name, News.fetch(name, true))
-    urls = Redis.current.smembers("#{name}-webhooks")
+  def execute(type, category)
+    name = category['name'].capitalize
+    new_posts = cache_posts(type, News.fetch(type, true))
+    urls = Redis.current.smembers("#{type}-webhooks")
 
     return new_posts if new_posts.empty? || urls.empty?
-    LodestoneLogger.info("Found #{new_posts.size} new posts for #{name.capitalize}.")
+    LodestoneLogger.info("Found #{new_posts.size} new posts for #{name}.")
     sent = removed = failed = 0
 
     embeds = new_posts.map do |post|
@@ -40,7 +40,7 @@ module Webhooks
             rescue RestClient::ExceptionWithResponse => e
               if JSON.parse(e.response)['code'] == 10015
                 # Webhook has been deleted, so halt and remove it from Redis
-                removed += 1 if Redis.current.srem("#{name}-webhooks", url)
+                removed += 1 if Redis.current.srem("#{type}-webhooks", url)
               else
                 # Webhook failed to send, so add it to the resend queue to try again later
                 failed += 1
@@ -56,17 +56,17 @@ module Webhooks
     end
 
     num_urls = urls.size - removed
-    LodestoneLogger.info("#{removed} #{name.capitalize} webhooks unsubscribed.") if removed > 0
-    LodestoneLogger.info("#{failed} #{name.capitalize} webhooks failed to send.") if failed > 0
+    LodestoneLogger.info("#{removed} #{name} webhooks unsubscribed.") if removed > 0
+    LodestoneLogger.info("#{failed} #{name} webhooks failed to send.") if failed > 0
     LodestoneLogger.info("Sent #{sent}/#{new_posts.size * num_urls} updates " \
                 "across #{num_urls} webhooks " \
-                "subscribed to #{name.capitalize}.")
+                "subscribed to #{name}.")
     new_posts
   end
 
   def execute_all
-    News.categories.to_h.values.each do |category|
-      execute(category)
+    News.categories.to_h.each do |type, category|
+      execute(type.to_s, category)
       sleep(3) # A quick nap to ensure the rate limit buckets reset
     end
   end

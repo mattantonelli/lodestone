@@ -29,7 +29,7 @@ configure do
 end
 
 get '/' do
-  @categories = { topics: '1', notices: '0', maintenance: '1', updates: '1', status: '0' }
+  @categories = { topics: '1', notices: '0', maintenance: '1', updates: '1', status: '0', developers: '1' }
   @code = params['code']
   erb :index
 end

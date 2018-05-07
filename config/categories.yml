@@ -28,3 +28,9 @@ status:
   url:  'https://na.finalfantasyxiv.com/lodestone/news/category/4'
   icon: 'http://lodestone.raelys.com/images/status.png'
   color: 10042685
+
+developers:
+  name: "Developers' Blog"
+  url:  'https://na.finalfantasyxiv.com/pr/blog/atom.xml'
+  icon: 'http://lodestone.raelys.com/images/developers.png'
+  color: 6737151

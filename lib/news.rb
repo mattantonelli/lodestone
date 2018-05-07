@@ -62,6 +62,8 @@ module News
   def parse(page, type)
     if type == 'topics'
       parse_topics(page)
+    elsif type == 'developers'
+      parse_developers_blog(page)
     else
       parse_news(page)
     end
@@ -90,6 +92,18 @@ module News
       description = details.css('p').children.first.text
 
       { id: id, url: url, title: title, time: format_time(time), image: image, description: description }
+    end
+  end
+
+  def parse_developers_blog(page)
+    page.css('entry').map do |entry|
+      url = entry.at_css('link')['href']
+      id = entry.at_css('id').text
+      title = entry.at_css('title').text
+      time = entry.at_css('published').text
+      description = entry.css('content > p').first(2).map { |p| p.text.strip }.reject(&:empty?).join("\n\n")
+
+      { id: id, url: url, title: title, time: time, description: description }
     end
   end
 
