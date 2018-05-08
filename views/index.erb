@@ -8,9 +8,17 @@
     <link rel="shortcut icon" href="images/favicon.ico">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
     <link rel="stylesheet" href="css/style.css">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E=" crossorigin="anonymous"></script>
+    <script src="scripts/form.js" type="text/javascript"></script>
   </head>
   <body>
     <div class="container">
+      <noscript>
+        <div class="alert alert-danger mt-2" role="alert">
+          You must enable JavaScript to choose your preferences!
+        </div>
+      </noscript>
+
       <% @flash&.each do |type, message| %>
         <div class="alert alert-<%= type %> mt-2" role="alert">
           <%= message %>
@@ -25,14 +33,11 @@
         </div>
       </div>
 
-      <% unless @code %>
-        <div class="row mt-4">
-          <div class="col-md-8 offset-md-2">
-            <%= erb :faq %>
-          </div>
+      <div class="row mt-4">
+        <div class="col-md-8 offset-md-2">
+          <%= erb :faq %>
         </div>
-      <% end %>
-
+      </div>
     </div>
 
     <div class="footer text-center">

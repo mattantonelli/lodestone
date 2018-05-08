@@ -30,14 +30,14 @@ end
 
 get '/' do
   @categories = { topics: '1', notices: '0', maintenance: '1', updates: '1', status: '0', developers: '1' }
+  @state = @categories.values.join
   @code = params['code']
   erb :index
 end
 
-post '/' do
-  @categories = News.categories.to_h.keys.each_with_object({}) do |category, h|
-    h[category.to_s] = params.dig('categories', category) || '0'
-  end
+get '/authorize' do
+  @state = params['state']
+  @categories = News.categories.to_h.keys.map(&:to_s).zip(@state.chars).to_h
 
   begin
     url = Webhooks.url(params['code'])
