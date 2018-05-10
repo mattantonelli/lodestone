@@ -96,7 +96,7 @@ module Webhooks
     {
       author: {
         name: category['name'],
-        url: category['url'],
+        url: category['link'],
         icon_url: category['icon']
       },
       title: post[:title],
