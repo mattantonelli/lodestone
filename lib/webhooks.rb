@@ -27,9 +27,11 @@ module Webhooks
         Thread.new do
           embeds.each do |embed|
             body = { embeds: [embed] }.to_json
+            successful = false
 
             begin
               response = RestClient.post(url, body, content_type: :json)
+              successful = true
               sent += 1
 
               # Respect the dynamic rate limit
@@ -41,11 +43,16 @@ module Webhooks
               if JSON.parse(e.response)['code'] == 10015
                 # Webhook has been deleted, so halt and remove it from Redis
                 removed += 1 if Redis.current.srem("#{type}-webhooks", url)
-              else
-                # Webhook failed to send, so add it to the resend queue to try again later
-                failed += 1
-                WebhooksResend.add(url, body)
               end
+            rescue Exception => e
+              LodestoneLogger.error(e.inspect)
+              e.backtrace.each { |line| LodestoneLogger.error(line) }
+            end
+
+            unless successful
+              # Webhook failed to send, so add it to the resend queue to try again later
+              failed += 1
+              WebhooksResend.add(url, body)
             end
           end
         end
@@ -59,8 +66,8 @@ module Webhooks
     LodestoneLogger.info("#{removed} #{name} webhooks unsubscribed.") if removed > 0
     LodestoneLogger.info("#{failed} #{name} webhooks failed to send.") if failed > 0
     LodestoneLogger.info("Sent #{sent}/#{new_posts.size * num_urls} updates " \
-                "across #{num_urls} webhooks " \
-                "subscribed to #{name}.")
+                         "across #{num_urls} webhooks " \
+                         "subscribed to #{name}.")
     new_posts
   end
 
