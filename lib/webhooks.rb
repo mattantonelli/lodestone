@@ -26,12 +26,9 @@ module Webhooks
       threads = slice.map do |url|
         Thread.new do
           embeds.each do |embed|
-            body = { embeds: [embed] }.to_json
-            successful = false
-
             begin
+              body = { embeds: [embed] }.to_json
               response = RestClient.post(url, body, content_type: :json)
-              successful = true
               sent += 1
 
               # Respect the dynamic rate limit
@@ -47,12 +44,8 @@ module Webhooks
             rescue Exception => e
               LodestoneLogger.error(e.inspect)
               e.backtrace.each { |line| LodestoneLogger.error(line) }
-            end
-
-            unless successful
-              # Webhook failed to send, so add it to the resend queue to try again later
-              failed += 1
               WebhooksResend.add(url, body)
+              failed += 1
             end
           end
         end
