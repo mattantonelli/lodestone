@@ -1,7 +1,7 @@
 module NewsCache
   extend self
 
-  EXPIRES_IN = 1800.freeze # 30m
+  EXPIRES_IN = 900.freeze # 15m
 
   def cache(news, type, locale)
     Redis.current.hset("#{locale}-news-data", type, news.to_json)

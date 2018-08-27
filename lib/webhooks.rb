@@ -129,7 +129,6 @@ module Webhooks
       description: post[:description],
       url: url,
       color: category['color'],
-      timestamp: post[:time],
       thumbnail: {
         url: category['thumbnail']
       },
