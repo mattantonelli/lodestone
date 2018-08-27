@@ -8,6 +8,7 @@
       <input type="hidden" name="client_id" value="<%= Webhooks::CONFIG.client_id %>">
       <input type="hidden" name="scope" value="webhook.incoming">
       <input type="hidden" name="state" value="<%= @state %>">
+      <input type="hidden" name="redirect_uri" value="<%= @redirect_uri %>">
 
       <div class="form-group">
         <% @categories.each do |category, value| %>

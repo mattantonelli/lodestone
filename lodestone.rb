@@ -15,6 +15,9 @@ configure do
   require_relative 'lib/scheduler.rb'
   require_relative 'lib/webhooks.rb'
 
+  LOCALES = %w(na eu fr de jp).freeze
+  HOSTS = YAML.load_file('config/hosts.yml').freeze
+
   use Rack::CommonLogger, LodestoneLogger.logger
   set :logger, LodestoneLogger.logger
 
@@ -32,16 +35,18 @@ get '/' do
   @categories = { topics: '1', notices: '0', maintenance: '1', updates: '1', status: '0', developers: '1' }
   @state = @categories.values.join
   @code = params['code']
+  @redirect_uri = "#{HOSTS[request_locale]}/authorize"
   erb :index
 end
 
 get '/authorize' do
   @state = params['state']
   @categories = News.categories.to_h.keys.map(&:to_s).zip(@state.chars).to_h
+  @redirect_uri = "#{HOSTS[request_locale]}/authorize"
 
   begin
-    url = Webhooks.url(params['code'])
-    News.subscribe(@categories.merge('url' => url))
+    url = Webhooks.url(params['code'], @redirect_uri)
+    News.subscribe(@categories.merge('url' => url), request_locale)
     @flash = { success: 'You are now subscribed to Lodestone updates.' }
   rescue Exception => e
     logger.error "Failed to subscribe - #{e.message}"
@@ -57,7 +62,7 @@ get '/news/subscribe' do
   cache_control :no_cache
 
   begin
-    json News.subscribe(params, true)
+    json News.subscribe(params, request_locale, true)
   rescue ArgumentError
     halt 400, json(error: 'Invalid webhook URL.')
   end
@@ -69,7 +74,7 @@ post '/news/subscribe' do
 
   begin
     data = JSON.parse(request.body.read)
-    json News.subscribe(data, true)
+    json News.subscribe(data, request_locale, true)
   rescue ArgumentError
     halt 400, json(error: 'Invalid webhook URL.')
   rescue JSON::ParserError
@@ -81,8 +86,8 @@ get '/news/:category' do
   category = params[:category].downcase
 
   begin
-    news = News.fetch(category)
-    headers = NewsCache.headers(category)
+    news = News.fetch(category, request_locale)
+    headers = NewsCache.headers(category, request_locale)
     last_modified headers[:last_modified]
     expires headers[:expires], :must_revalidate
     json news
@@ -97,4 +102,9 @@ end
 
 error do
   erb 'errors/error'.to_sym
+end
+
+def request_locale
+  locale = request.host[0, 2]
+  LOCALES.include?(locale) ? locale : 'na'
 end

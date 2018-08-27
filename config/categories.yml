@@ -1,42 +1,42 @@
 topics:
   name: 'Topics'
-  url: 'https://na.finalfantasyxiv.com/lodestone/topics'
-  link: 'https://na.finalfantasyxiv.com/lodestone/topics'
+  url:  'https://finalfantasyxiv.com/lodestone/topics'
+  link: 'https://finalfantasyxiv.com/lodestone/topics'
   icon: 'http://lodestone.raelys.com/images/topics.png'
   thumbnail: 'http://lodestone.raelys.com/images/thumbnail.png'
   color: 14258475
 
 notices:
   name: 'Notices'
-  url:  'https://na.finalfantasyxiv.com/lodestone/news/category/1'
-  link:  'https://na.finalfantasyxiv.com/lodestone/news/category/1'
+  url:  'https://finalfantasyxiv.com/lodestone/news/category/1'
+  link: 'https://finalfantasyxiv.com/lodestone/news/category/1'
   icon: 'http://lodestone.raelys.com/images/notices.png'
   color: 13421772
 
 maintenance:
   name: 'Maintenance'
-  url:  'https://na.finalfantasyxiv.com/lodestone/news/category/2'
-  link:  'https://na.finalfantasyxiv.com/lodestone/news/category/2'
+  url:  'https://finalfantasyxiv.com/lodestone/news/category/2'
+  link: 'https://finalfantasyxiv.com/lodestone/news/category/2'
   icon: 'http://lodestone.raelys.com/images/maintenance.png'
   color: 13413161
 
 updates:
   name: 'Updates'
-  url:  'https://na.finalfantasyxiv.com/lodestone/news/category/3'
-  link:  'https://na.finalfantasyxiv.com/lodestone/news/category/3'
+  url:  'https://finalfantasyxiv.com/lodestone/news/category/3'
+  link: 'https://finalfantasyxiv.com/lodestone/news/category/3'
   icon: 'http://lodestone.raelys.com/images/updates.png'
   color: 7051581
 
 status:
   name: 'Status'
-  url:  'https://na.finalfantasyxiv.com/lodestone/news/category/4'
-  link:  'https://na.finalfantasyxiv.com/lodestone/news/category/4'
+  url:  'https://finalfantasyxiv.com/lodestone/news/category/4'
+  link: 'https://finalfantasyxiv.com/lodestone/news/category/4'
   icon: 'http://lodestone.raelys.com/images/status.png'
   color: 10042685
 
 developers:
   name: "Developers' Blog"
-  url:  'https://na.finalfantasyxiv.com/pr/blog/atom.xml'
-  link:  'https://na.finalfantasyxiv.com/pr/blog/'
+  url:  'https://finalfantasyxiv.com/pr/blog/atom.xml'
+  link: 'https://finalfantasyxiv.com/pr/blog/'
   icon: 'http://lodestone.raelys.com/images/developers.png'
   color: 6737151
