@@ -88,6 +88,24 @@ module Webhooks
     RestClient.post(url, { content: message })
   end
 
+  def send_announcement(message)
+    body = { content: message }.to_json
+    count = 0
+
+    Redis.current.smembers('all-webhooks').each do |url|
+      begin
+        RestClient.post(url, body, content_type: :json)
+        count += 1
+      rescue RestClient::ExceptionWithResponse => e
+        if JSON.parse(e.response)['code'] == 10015
+          Redis.current.srem('all-webhooks', url)
+        end
+      end
+    end
+
+    LodestoneLogger.info("Sent announcement to #{count} webhooks.")
+  end
+
   private
   # Cache any new post IDs for the given category and return the new posts
   def cache_posts(name, locale, posts)
