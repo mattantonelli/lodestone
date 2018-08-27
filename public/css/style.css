@@ -1,12 +1,17 @@
-html {
-  position: relative;
-  min-height: 100%;
-}
-
 body {
   background: #333;
   color: #fff;
-  margin-bottom: 48px;
+}
+
+.flag > a {
+  background-image: url('/images/flags.png');
+  display: block;
+  width: 45px;
+  height: 30px;
+}
+
+.flag.list-inline-item:not(:last-child) {
+  margin-right: 20px;
 }
 
 .card {
@@ -48,11 +53,20 @@ a.link-unstyled:hover {
   color: #ccc;
 }
 
-.footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  height: 48px;
-  line-height: 48px;
+a.discord {
+  background-color: #7289DA;
+  color: #fff;
 }
 
+a.discord:hover {
+  background-color: #5271D8;
+}
+
+a.patreon {
+  background-color: #F96855;
+  color: #fff;
+}
+
+a.patreon:hover {
+  background-color: #F74E3B;
+}
