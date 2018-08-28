@@ -1,24 +1,24 @@
 module NewsCache
   extend self
 
-  EXPIRES_IN = 1800.freeze # 30m
+  EXPIRES_IN = 900.freeze # 15m
 
-  def cache(news, type)
-    Redis.current.hset('news-data', type, news.to_json)
-    Redis.current.hset('news-timestamps', type, Time.now)
+  def cache(news, type, locale)
+    Redis.current.hset("#{locale}-news-data", type, news.to_json)
+    Redis.current.hset("#{locale}-news-timestamps", type, Time.now)
   end
 
-  def cached(type)
-    JSON.parse(Redis.current.hget('news-data', type), symbolize_names: true)
+  def cached(type, locale)
+    JSON.parse(Redis.current.hget("#{locale}-news-data", type), symbolize_names: true)
   end
 
-  def headers(type)
-    last_modified = Time.parse(Redis.current.hget('news-timestamps', type))
+  def headers(type, locale)
+    last_modified = Time.parse(Redis.current.hget("#{locale}-news-timestamps", type))
     { last_modified: last_modified, expires: last_modified + EXPIRES_IN }
   end
 
-  def stale?(type)
-    timestamp = Redis.current.hget('news-timestamps', type)
+  def stale?(type, locale)
+    timestamp = Redis.current.hget("#{locale}-news-timestamps", type)
     cache_time = timestamp ? Time.parse(timestamp) : Time.at(0)
     Time.now > cache_time + EXPIRES_IN
   end

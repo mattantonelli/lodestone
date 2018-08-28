@@ -1,0 +1,8 @@
+<ul class="list-inline text-center">
+  <% %w(na eu fr de jp).each_with_index do |locale, i| %>
+    <li class="list-inline-item flag">
+      <a href="<%= HOSTS[locale] %>" class="flag" style="background-position: -<%= 45 * i %>px 0">
+      </a>
+    </li>
+  <% end %>
+</ul>

@@ -13,6 +13,8 @@ http://lodestone.raelys.com/
 2. `bundle install`
 3. `cp config/webhook.yml.example config/webhook.yml`
     * [Create an app](https://discordapp.com/developers/applications/me) and set these values appropriately
+3. `cp config/hosts.yml.example config/hosts.yml`
+    * Set these values appropriately
 4. `bundle exec rackup`
 
 ## Usage

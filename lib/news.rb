@@ -6,23 +6,26 @@ module News
 
   BASE_URL = 'http://na.finalfantasyxiv.com'.freeze
   CATEGORIES = OpenStruct.new(YAML.load_file('config/categories.yml')).freeze
+  GREETINGS = YAML.load_file('config/greetings.yml').freeze
   WEBHOOK_URL_FORMAT = /https:\/\/discordapp.com\/api\/webhooks\/\d+\/.+/.freeze
 
-  def fetch(type, skip_cache = false)
+  def fetch(type, locale, skip_cache = false)
     category = CATEGORIES[type]
     raise ArgumentError if category.nil?
 
-    if skip_cache || stale?(type)
-      page = Nokogiri::HTML(open(category['url']))
+    if skip_cache || stale?(type, locale)
+      uri = URI.parse(category['url'])
+      uri.host = "#{locale}.#{uri.host}"
+      page = Nokogiri::HTML(open(uri))
       news = parse(page, type)
-      cache(news, type)
+      cache(news, type, locale)
       news
     else
-      cached(type)
+      cached(type, locale)
     end
   end
 
-  def subscribe(params, validate = false)
+  def subscribe(params, locale, validate = false)
     url = params['url']
 
     if validate
@@ -33,21 +36,22 @@ module News
 
     status = CATEGORIES.to_h.keys.map(&:to_s).each_with_object({}) do |category, h|
       choice = params[category].to_s
+      key = "#{locale}-#{category}-webhooks"
 
       if choice == '1'
-        redis.sadd("#{category}-webhooks", url)
+        redis.sadd(key, url)
         h[category] = true
       elsif choice == '0'
-        redis.srem("#{category}-webhooks", url)
+        redis.srem(key, url)
         h[category] = false
       else
-        h[category] = redis.sismember("#{category}-webhooks", url)
+        h[category] = redis.sismember(key, url)
       end
     end
 
     # Send a notification if the webhook is newly subscribed
     if status.values.any? && !Redis.current.sismember('all-webhooks', url)
-      Webhooks.send_message(url, 'Lodestone updates will now be posted in this channel. <http://lodestone.raelys.com>')
+      Webhooks.send_message(url, "#{GREETINGS[locale]} <#{HOSTS[locale]}>")
       Redis.current.sadd('all-webhooks', url)
     end
 
