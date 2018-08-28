@@ -113,9 +113,6 @@ module Webhooks
   end
 
   def embed_post(post, category, locale)
-    url = URI.parse(post[:url])
-    url.host = "#{locale}.#{url.host}"
-
     link = URI.parse(category['link'])
     link.host = "#{locale}.#{link.host}"
 
@@ -127,7 +124,7 @@ module Webhooks
       },
       title: post[:title],
       description: post[:description],
-      url: url,
+      url: post[:url],
       color: category['color'],
       thumbnail: {
         url: category['thumbnail']

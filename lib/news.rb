@@ -4,7 +4,7 @@ module News
   extend self
   extend NewsCache
 
-  BASE_URL = 'http://na.finalfantasyxiv.com'.freeze
+  BASE_URL = 'http://finalfantasyxiv.com'.freeze
   CATEGORIES = OpenStruct.new(YAML.load_file('config/categories.yml')).freeze
   GREETINGS = YAML.load_file('config/greetings.yml').freeze
   WEBHOOK_URL_FORMAT = /https:\/\/discordapp.com\/api\/webhooks\/\d+\/.+/.freeze
@@ -17,7 +17,7 @@ module News
       uri = URI.parse(category['url'])
       uri.host = "#{locale}.#{uri.host}"
       page = Nokogiri::HTML(open(uri))
-      news = parse(page, type)
+      news = parse(page, type, locale)
       cache(news, type, locale)
       news
     else
@@ -63,31 +63,33 @@ module News
   end
 
   private
-  def parse(page, type)
+  def parse(page, type, locale)
     if type == 'topics'
-      parse_topics(page)
+      parse_topics(page, locale)
     elsif type == 'developers'
       parse_developers_blog(page)
     else
-      parse_news(page)
+      parse_news(page, locale)
     end
   end
 
-  def parse_news(page)
+  def parse_news(page, locale)
     page.css('li.news__list').map do |item|
-      url = "#{BASE_URL}#{item.at_css('a')['href']}"
-      id = url.split('/').last
+      uri = URI.parse("#{BASE_URL}#{item.at_css('a')['href']}")
+      uri.host = "#{locale}.#{uri.host}"
+      id = uri.to_s.split('/').last
       title = item.at_css('p').text.gsub(/\[.*\]/, '')
       time = item.css('script').text.scan(/\d+/).last.to_i
 
-      { id: id, url: url, title: title, time: format_time(time) }
+      { id: id, url: uri.to_s, title: title, time: format_time(time) }
     end
   end
 
-  def parse_topics(page)
+  def parse_topics(page, locale)
     page.css('li.news__list--topics').map do |item|
-      url = "#{BASE_URL}#{item.at_css('p.news__list--title > a')['href']}"
-      id = url.split('/').last
+      uri = URI.parse("#{BASE_URL}#{item.at_css('p.news__list--title > a')['href']}")
+      uri.host = "#{locale}.#{uri.host}"
+      id = uri.to_s.split('/').last
       title = item.at_css('p.news__list--title').text
       time = item.css('script').text.scan(/\d+/).last.to_i
 
@@ -95,7 +97,7 @@ module News
       image = details.at_css('img')['src']
       description = details.css('p').children.first.text
 
-      { id: id, url: url, title: title, time: format_time(time), image: image, description: description }
+      { id: id, url: uri.to_s, title: title, time: format_time(time), image: image, description: description }
     end
   end
 
