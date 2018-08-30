@@ -22,12 +22,12 @@ module Webhooks
       embed_post(post, category, locale)
     end
 
-    urls.each_slice(10) do |slice|
-      threads = slice.map do |url|
-        Thread.new do
-          embeds.each do |embed|
+    embeds.each do |embed|
+      body = { embeds: [embed] }.to_json
+      urls.each_slice(10) do |slice|
+        threads = slice.map do |url|
+          Thread.new do
             begin
-              body = { embeds: [embed] }.to_json
               response = RestClient.post(url, body, content_type: :json)
               sent += 1
 
@@ -40,6 +40,10 @@ module Webhooks
               if JSON.parse(e.response)['code'] == 10015
                 # Webhook has been deleted, so halt and remove it from Redis
                 removed += 1 if Redis.current.srem("#{locale}-#{type}-webhooks", url)
+              else
+                LodestoneLogger.error(e.inspect)
+                WebhooksResend.add(url, body)
+                failed += 1
               end
             rescue Exception => e
               LodestoneLogger.error(e.inspect)
@@ -49,10 +53,10 @@ module Webhooks
             end
           end
         end
-      end
 
-      # Wait for all threads to complete before continuing
-      ThreadsWait.all_waits(*threads)
+        # Wait for all threads to complete and do some clean up before continuing
+        ThreadsWait.all_waits(*threads)
+      end
     end
 
     num_urls = urls.size - removed
