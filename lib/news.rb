@@ -16,10 +16,17 @@ module News
     if skip_cache || stale?(type, locale)
       uri = URI.parse(category['url'])
       uri.host = "#{locale}.#{uri.host}"
-      page = Nokogiri::HTML(open(uri))
-      news = parse(page, type, locale)
-      cache(news, type, locale)
-      news
+      begin
+        open('http://www.google.com/butts')
+        page = Nokogiri::HTML(open(uri))
+        news = parse(page, type, locale)
+        cache(news, type, locale)
+        news
+      rescue OpenURI::HTTPError => e
+        # Could not fetch new data, so log the error and return the latest cached data
+        LodestoneLogger.error("Error contacting the Lodestone: #{e.to_s}")
+        cached(type, locale)
+      end
     else
       cached(type, locale)
     end
