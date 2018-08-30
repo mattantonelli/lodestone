@@ -17,7 +17,6 @@ module News
       uri = URI.parse(category['url'])
       uri.host = "#{locale}.#{uri.host}"
       begin
-        open('http://www.google.com/butts')
         page = Nokogiri::HTML(open(uri))
         news = parse(page, type, locale)
         cache(news, type, locale)
