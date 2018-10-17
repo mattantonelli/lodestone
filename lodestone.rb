@@ -89,6 +89,14 @@ post '/news/subscribe' do
   end
 end
 
+get '/news/feed' do
+  feed = News.feed(request_locale)
+  headers = NewsCache.headers(:topics, request_locale)
+  last_modified headers[:last_modified]
+  expires headers[:expires], :must_revalidate
+  json feed
+end
+
 get '/news/:category' do
   category = params[:category].downcase
 
