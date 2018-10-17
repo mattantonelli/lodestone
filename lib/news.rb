@@ -32,11 +32,12 @@ module News
   end
 
   def feed(locale)
-    posts = CATEGORIES.to_h.keys.flat_map do |type|
-      fetch(type, locale)
+    feed = CATEGORIES.to_h.keys.flat_map do |type|
+      posts = fetch(type, locale)
+      posts.each { |post| post[:category] = type }
     end
 
-    posts.sort_by { |post| DateTime.parse(post[:time]) }.reverse.first(20)
+    feed.sort_by { |post| DateTime.parse(post[:time]) }.reverse.first(20)
   end
 
   def subscribe(params, locale, validate = false)
