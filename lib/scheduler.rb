@@ -9,11 +9,11 @@ module Scheduler
       error.backtrace.each { |line| LodestoneLogger.error(line) }
     end
 
-    scheduler.cron('5,20,35,50 * * * *') do
+    scheduler.cron('5,15,25,35,45,55 * * * *') do
       Webhooks.execute_all
     end
 
-    scheduler.cron('0,15,30,45 * * * *') do
+    scheduler.cron('0,10,20,30,40,50 * * * *') do
       WebhooksResend.send_all
     end
   end

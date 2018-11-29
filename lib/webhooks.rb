@@ -24,7 +24,7 @@ module Webhooks
 
     embeds.each do |embed|
       body = { embeds: [embed] }.to_json
-      urls.each_slice(10) do |slice|
+      urls.each_slice(20) do |slice|
         threads = slice.map do |url|
           Thread.new do
             begin
