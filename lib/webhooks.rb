@@ -24,7 +24,7 @@ module Webhooks
 
     embeds.each do |embed|
       body = { embeds: [embed] }.to_json
-      urls.each_slice(20) do |slice|
+      urls.each_slice(100) do |slice|
         threads = slice.map do |url|
           Thread.new do
             begin
@@ -54,7 +54,6 @@ module Webhooks
           end
         end
 
-        # Wait for all threads to complete and do some clean up before continuing
         ThreadsWait.all_waits(*threads)
       end
     end
@@ -69,12 +68,16 @@ module Webhooks
   end
 
   def execute_all
-    LOCALES.each do |locale|
-      News.categories.to_h.each do |type, category|
-        execute(type.to_s, category, locale)
-        sleep(3) # A quick nap to ensure the rate limit buckets reset
+    threads = LOCALES.map do |locale|
+      Thread.new do
+        News.categories.to_h.each do |type, category|
+          execute(type.to_s, category, locale)
+          sleep(3) # A quick nap to ensure the rate limit buckets reset
+        end
       end
     end
+
+    ThreadsWait.all_waits(*threads)
   end
 
   # Create a webhook URL using an OAuth code
@@ -95,16 +98,23 @@ module Webhooks
   def send_announcement(message)
     body = { content: message }.to_json
     count = 0
+    urls = Redis.current.smembers('all-webhooks')
 
-    Redis.current.smembers('all-webhooks').each do |url|
-      begin
-        RestClient.post(url, body, content_type: :json)
-        count += 1
-      rescue RestClient::ExceptionWithResponse => e
-        if JSON.parse(e.response)['code'] == 10015
-          Redis.current.srem('all-webhooks', url)
+    urls.each_slice(20) do |slice|
+      threads = slice.map do |url|
+        Thread.new do
+          begin
+            RestClient.post(url, body, content_type: :json)
+            count += 1
+          rescue RestClient::ExceptionWithResponse => e
+            if JSON.parse(e.response)['code'] == 10015
+              Redis.current.srem('all-webhooks', url)
+            end
+          end
         end
       end
+
+      ThreadsWait.all_waits(*threads)
     end
 
     LodestoneLogger.info("Sent announcement to #{count} webhooks.")
