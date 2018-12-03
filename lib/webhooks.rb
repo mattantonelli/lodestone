@@ -24,7 +24,7 @@ module Webhooks
 
     embeds.each do |embed|
       body = { embeds: [embed] }.to_json
-      urls.each_slice(100) do |slice|
+      urls.each_slice(20) do |slice|
         threads = slice.map do |url|
           Thread.new do
             begin
@@ -59,8 +59,8 @@ module Webhooks
     end
 
     num_urls = urls.size - removed
-    LodestoneLogger.info("#{removed} #{name} webhooks unsubscribed.") if removed > 0
-    LodestoneLogger.info("#{failed} #{name} webhooks failed to send.") if failed > 0
+    LodestoneLogger.info("#{removed} #{locale.upcase} #{name} webhooks unsubscribed.") if removed > 0
+    LodestoneLogger.info("#{failed} #{locale.upcase} #{name} webhooks failed to send.") if failed > 0
     LodestoneLogger.info("Sent #{sent}/#{new_posts.size * num_urls} updates " \
                          "across #{num_urls} webhooks " \
                          "subscribed to #{locale.upcase} #{name}.")
