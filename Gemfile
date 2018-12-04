@@ -1,12 +1,12 @@
 source 'https://rubygems.org'
 ruby '~> 2.4.1'
 
-gem 'sinatra'
-gem 'sinatra-contrib'
-gem 'rack'
+gem 'sinatra', '2.0.3'
+gem 'sinatra-contrib', '2.0.3'
+gem 'rack', '~> 2.0.6'
 
 gem 'json'
-gem 'nokogiri'
+gem 'nokogiri', '~> 1.8.2'
 gem 'redis-namespace'
 gem 'rest-client'
 gem 'rufus-scheduler'
