@@ -1,6 +1,6 @@
 body {
   background: #333;
-  color: #fff;
+  color: #eee;
 }
 
 .flag > a {
@@ -15,13 +15,16 @@ body {
 }
 
 .card {
-  background: #404040;
-  border: 1px #555 solid;
+  background: #333;
 }
 
 .card-header {
-  background: #303030;
+  background-color: rgba(0, 0, 0, 0.4);
   font-weight: bold;
+}
+
+.card-body {
+  background-color: rgba(0, 0, 0, 0.2);
 }
 
 input.form-control, input.form-control:focus {
@@ -54,19 +57,19 @@ a.link-unstyled:hover {
 }
 
 a.discord {
-  background-color: #7289DA;
-  color: #fff;
+  background-color: #3D55A0;
+  color: #eee;
 }
 
 a.discord:hover {
-  background-color: #5271D8;
+  background-color: #324682;
 }
 
 a.patreon {
-  background-color: #F96855;
-  color: #fff;
+  background-color: #DB4534;
+  color: #eee;
 }
 
 a.patreon:hover {
-  background-color: #F74E3B;
+  background-color: #BF3C2D;
 }
