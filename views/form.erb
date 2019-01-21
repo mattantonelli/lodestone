@@ -1,8 +1,8 @@
 <div class="card">
   <div class="card-header">
-    Choose your preferences
+    <h5 class="mb-0">Choose your preferences</h5>
   </div>
-  <div class="card-body pb-3">
+  <div class="card-body pt-3 pb-2">
     <form method="get" action="<%= Webhooks::AUTHORIZE_URL %>">
       <input type="hidden" name="response_type" value="code">
       <input type="hidden" name="client_id" value="<%= Webhooks::CONFIG.client_id %>">
@@ -10,7 +10,7 @@
       <input type="hidden" name="state" value="<%= @state %>">
       <input type="hidden" name="redirect_uri" value="<%= @redirect_uri %>">
 
-      <div class="form-group">
+      <div class="form-group mb-2">
         <% @categories.each do |category, value| %>
           <div class="form-check">
             <label class="form-check-label" for="<%= category %>">
@@ -24,7 +24,7 @@
 
       <div class="text-center">
         <button type="submit" class="btn btn-primary">Create Webhook</button>
-        <p class="mt-3 mb-0">This requires the <b>Manage Webhooks</b> permission.</p>
+        <p class="my-2">This requires the <b>Manage Webhooks</b> permission.</p>
       </div>
     </form>
   </div>
