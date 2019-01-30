@@ -130,6 +130,18 @@ module Webhooks
     link = URI.parse(category['link'])
     link.host = "#{locale}.#{link.host}"
 
+    if post[:start]
+      if locale == 'na'
+        description = "#{format_time(post, 'America/Los_Angeles')}\n" \
+          "#{format_time(post, 'America/New_York')}"
+      elsif locale == 'eu'
+        description = format_time(post, 'GMT')
+        description += "\n#{format_time(post, 'Europe/London')}" if TZInfo::Timezone.get('Europe/London').dst?
+      end
+    else
+      description = post[:description]
+    end
+
     {
       author: {
         name: category['name'],
@@ -137,7 +149,7 @@ module Webhooks
         icon_url: category['icon']
       },
       title: post[:title],
-      description: post[:description],
+      description: description,
       url: post[:url],
       color: category['color'],
       thumbnail: {
@@ -147,5 +159,14 @@ module Webhooks
         url: post[:image]
       }
     }
+  end
+
+  def format_time(post, zone)
+    zone = TZInfo::Timezone.get(zone)
+    start_time, end_time = post.values_at(:start, :end).map do |time|
+      zone.utc_to_local(Time.parse(time)).strftime("%a, %b %-d %-I:%M %p")
+    end
+
+    "#{start_time} to #{end_time} (#{zone.abbreviation})"
   end
 end

@@ -8,6 +8,8 @@ module News
   CATEGORIES = OpenStruct.new(YAML.load_file('config/categories.yml')).freeze
   GREETINGS = YAML.load_file('config/greetings.yml').freeze
   WEBHOOK_URL_FORMAT = /https:\/\/discordapp.com\/api\/webhooks\/\d+\/.+/.freeze
+  TIMESTAMP_LOCALES = %w(na eu).freeze
+  TIMESTAMP_REGEX = /(\w{3}\. \d{2}, \d{4})? (\d{1,2}:\d{2}(?: [ap]\.m\.)?)(?: \((\w+)\))?/i.freeze
 
   def fetch(type, locale, skip_cache = false)
     category = CATEGORIES[type]
@@ -19,11 +21,16 @@ module News
       begin
         page = Nokogiri::HTML(open(uri))
         news = parse(page, type, locale)
+        news = add_timestamps(news, type, locale) if type == 'maintenance' && TIMESTAMP_LOCALES.include?(locale)
         cache(news, type, locale)
         news
       rescue OpenURI::HTTPError => e
         # Could not fetch new data, so log the error and return the latest cached data
         LodestoneLogger.error("Error contacting the Lodestone: #{e.to_s}")
+        cached(type, locale)
+      rescue Exception => e
+        LodestoneLogger.error("Fatal error fetching news: #{e.inspect}")
+        e.backtrace.each { |line| LodestoneLogger.error(line) }
         cached(type, locale)
       end
     else
@@ -125,6 +132,37 @@ module News
       description = entry.css('content > p').first(2).map { |p| p.text.strip }.reject(&:empty?).join("\n\n")
 
       { id: id, url: url, title: title, time: time, description: description }
+    end
+  end
+
+  def add_timestamps(news, type, locale)
+    key = "#{locale}-#{type}-timestamps"
+
+    news.map do |post|
+      if Redis.current.hexists(key, post[:id])
+        timestamps = JSON.parse(Redis.current.hget(key, post[:id]), symbolize_names: true)
+        post.merge(timestamps)
+      else
+        begin
+          page = Nokogiri::HTML(open(post[:url]))
+          details = page.at_css('.news__detail__wrapper').text
+          times = details.scan(TIMESTAMP_REGEX)
+
+          # Add missing date/time zone using data from the other time
+          times[0][2] = times[1][2]
+          times[1][0] ||= times[0][0]
+
+          start_time, end_time = times.map { |time| Time.parse(time.join(' ')).utc.strftime('%FT%TZ') }
+          Redis.current.hset(key, post[:id], { start: start_time, end: end_time }.to_json)
+          post[:start] = start_time
+          post[:end] = end_time
+          post
+        rescue Exception => e
+          LodestoneLogger.error("Fatal error adding timestamps: #{e.inspect}")
+          e.backtrace.each { |line| LodestoneLogger.error(line) }
+          post.merge(start: nil, end: nil)
+        end
+      end
     end
   end
 
