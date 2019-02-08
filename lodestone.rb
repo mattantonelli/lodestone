@@ -90,6 +90,14 @@ post '/news/subscribe' do
   end
 end
 
+get '/news/all' do
+  news = News.all(request_locale)
+  headers = NewsCache.headers(:topics, request_locale)
+  last_modified headers[:last_modified]
+  expires headers[:expires], :must_revalidate
+  json news
+end
+
 get '/news/feed' do
   feed = News.feed(request_locale)
   headers = NewsCache.headers(:topics, request_locale)
