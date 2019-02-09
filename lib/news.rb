@@ -9,7 +9,7 @@ module News
   GREETINGS = YAML.load_file('config/greetings.yml').freeze
   WEBHOOK_URL_FORMAT = /https:\/\/discordapp.com\/api\/webhooks\/\d+\/.+/.freeze
   TIMESTAMP_LOCALES = %w(na eu).freeze
-  TIMESTAMP_REGEX = /(\w{3}\. \d{2}, \d{4})? (\d{1,2}:\d{2}(?: [ap]\.m\.)?)(?: \((\w+)\))?/i.freeze
+  TIMESTAMP_REGEX = /(\w{3}\. \d{1,2}, \d{4})? (\d{1,2}:\d{2}(?: [ap]\.m\.)?)(?: \((\w+)\))?/i.freeze
 
   def fetch(type, locale, skip_cache = false)
     category = CATEGORIES[type]
