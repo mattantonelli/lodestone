@@ -65,31 +65,6 @@ get '/authorize' do
   erb :index
 end
 
-# Check subscription status
-get '/news/subscribe' do
-  cache_control :no_cache
-
-  begin
-    json News.subscribe(params, request_locale, true)
-  rescue ArgumentError
-    halt 400, json(error: 'Invalid webhook URL.')
-  end
-end
-
-# Subscribe/update subscription
-post '/news/subscribe' do
-  cache_control :no_cache
-
-  begin
-    data = JSON.parse(request.body.read)
-    json News.subscribe(data, request_locale, true)
-  rescue ArgumentError
-    halt 400, json(error: 'Invalid webhook URL.')
-  rescue JSON::ParserError
-    halt 400, json(error: 'Invalid JSON body.')
-  end
-end
-
 get '/news/all' do
   news = News.all(request_locale)
   headers = NewsCache.headers(:topics, request_locale)
