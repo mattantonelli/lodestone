@@ -40,13 +40,13 @@ module News
 
   def all(locale)
     CATEGORIES.to_h.keys.each_with_object({}) do |type, h|
-      h[type] = fetch(type, locale)
+      h[type] = fetch(type.to_s, locale)
     end
   end
 
   def feed(locale)
     feed = CATEGORIES.to_h.keys.flat_map do |type|
-      posts = fetch(type, locale)
+      posts = fetch(type.to_s, locale)
       posts.each { |post| post[:category] = type }
     end
 
