@@ -47,8 +47,9 @@ get '/' do
 end
 
 get '/authorize' do
-  redirect '/' if params['error']
   @state = params['state']
+  redirect '/' if @state.nil? || params['error']
+
   @categories = News.categories.to_h.keys.map(&:to_s).zip(@state.chars).to_h
   @redirect_uri = "#{HOSTS[request_locale]}/authorize"
 
