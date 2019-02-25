@@ -9,7 +9,7 @@ module News
   GREETINGS = YAML.load_file('config/greetings.yml').freeze
   WEBHOOK_URL_FORMAT = /https:\/\/discordapp.com\/api\/webhooks\/\d+\/.+/.freeze
   TIMESTAMP_LOCALES = %w(na eu).freeze
-  TIMESTAMP_REGEX = /(\w{3}\. \d{1,2}, \d{4})? (\d{1,2}:\d{2}(?: [ap]\.m\.)?)(?: \((\w+)\))?/i.freeze
+  TIMESTAMP_REGEX = /(\w{3}\.? \d{1,2}, \d{4})? (?:from )?(\d{1,2}:\d{2}(?: [ap]\.m\.)?)(?: \((\w+)\))?/i.freeze
 
   def fetch(type, locale, skip_cache = false)
     category = CATEGORIES[type]
@@ -29,7 +29,7 @@ module News
         LodestoneLogger.error("Error contacting the Lodestone: #{e.to_s}")
         cached(type, locale)
       rescue Exception => e
-        LodestoneLogger.error("Fatal error fetching news: #{e.inspect}")
+        LodestoneLogger.error("Fatal error fetching news: #{e.to_s}")
         e.backtrace.each { |line| LodestoneLogger.error(line) }
         cached(type, locale)
       end
@@ -160,14 +160,18 @@ module News
             slice[1][0] ||= slice[0][0]
           end
 
-          start_time, end_time = [times.first, times.last].map { |time| Time.parse(time.join(' ')).utc.strftime('%FT%TZ') }
+          start_time, end_time = [times.first, times.last].map do |time|
+            raise ArgumentError, "Invalid timestamp '#{time.join(' ')}'" if time.any?(&:nil?)
+            Time.parse(time.join(' ')).utc.strftime('%FT%TZ')
+          end
+
           Redis.current.hset(key, post[:id], { start: start_time, end: end_time }.to_json)
           post[:start] = start_time
           post[:end] = end_time
           post
         rescue Exception => e
-          LodestoneLogger.error("Fatal error adding timestamps: #{e.inspect}")
-          e.backtrace.each { |line| LodestoneLogger.error(line) }
+          LodestoneLogger.error("Fatal error adding timestamps for #{post[:url]}")
+          LodestoneLogger.error(e.to_s)
           post.merge(start: nil, end: nil)
         end
       end
