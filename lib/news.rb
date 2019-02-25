@@ -151,14 +151,16 @@ module News
       else
         begin
           page = Nokogiri::HTML(open(post[:url]))
-          details = page.at_css('.news__detail__wrapper').text
+          details = page.at_css('.news__detail__wrapper').text.partition('[Date & Time]').last
           times = details.scan(TIMESTAMP_REGEX)
 
-          # Add missing date/time zone using data from the other time
-          times[0][2] = times[1][2]
-          times[1][0] ||= times[0][0]
+          # Add missing date/time zone to each time pair using data from the paired time
+          times.each_slice(2) do |slice|
+            slice[0][2] = slice[1][2]
+            slice[1][0] ||= slice[0][0]
+          end
 
-          start_time, end_time = times.map { |time| Time.parse(time.join(' ')).utc.strftime('%FT%TZ') }
+          start_time, end_time = [times.first, times.last].map { |time| Time.parse(time.join(' ')).utc.strftime('%FT%TZ') }
           Redis.current.hset(key, post[:id], { start: start_time, end: end_time }.to_json)
           post[:start] = start_time
           post[:end] = end_time
