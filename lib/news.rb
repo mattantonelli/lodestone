@@ -153,6 +153,7 @@ module News
           page = Nokogiri::HTML(open(post[:url]))
           details = page.at_css('.news__detail__wrapper').text.partition('[Date & Time]').last
           times = details.scan(TIMESTAMP_REGEX)
+          times = times.take((times.size / 2) * 2) # Only take time pairs
 
           # Add missing date/time zone to each time pair using data from the paired time
           times.each_slice(2) do |slice|
