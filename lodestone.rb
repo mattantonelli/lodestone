@@ -8,6 +8,7 @@ require 'ostruct'
 require 'time'
 require 'thwait'
 require 'yaml'
+require 'securerandom'
 
 configure do
   require_relative 'lib/logger.rb'
@@ -17,6 +18,8 @@ configure do
 
   LOCALES = %w(na eu fr de jp).freeze
   HOSTS = YAML.load_file('config/hosts.yml').freeze
+  GA_URL = 'www.google-analytics.com/collect'.freeze
+  GA_TID = 'UA-109201715-1'.freeze
 
   use Rack::CommonLogger, LodestoneLogger.logger
   set :logger, LodestoneLogger.logger
@@ -67,6 +70,7 @@ get '/authorize' do
 end
 
 get '/news/all' do
+  track_request
   news = News.all(request_locale)
   headers = NewsCache.headers(:topics, request_locale)
   last_modified headers[:last_modified]
@@ -75,6 +79,7 @@ get '/news/all' do
 end
 
 get '/news/feed' do
+  track_request
   feed = News.feed(request_locale)
   headers = NewsCache.headers(:topics, request_locale)
   last_modified headers[:last_modified]
@@ -83,6 +88,7 @@ get '/news/feed' do
 end
 
 get '/news/:category' do
+  track_request
   category = params[:category].downcase
 
   begin
@@ -107,4 +113,8 @@ end
 def request_locale
   locale = request.host[0, 2]
   LOCALES.include?(locale) ? locale : 'na'
+end
+
+def track_request
+  RestClient.post(GA_URL, { v: 1, tid: GA_TID, cid: SecureRandom.uuid, t: 'pageview', dp: request.path })
 end
