@@ -116,5 +116,7 @@ def request_locale
 end
 
 def track_request
-  RestClient.post(GA_URL, { v: 1, tid: GA_TID, cid: SecureRandom.uuid, t: 'pageview', dp: request.path })
+  if settings.production?
+    RestClient.post(GA_URL, { v: 1, tid: GA_TID, cid: SecureRandom.uuid, t: 'pageview', dp: request.path.downcase })
+  end
 end
