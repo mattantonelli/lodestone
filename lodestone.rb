@@ -30,15 +30,7 @@ configure do
   # Cache static assets for one week
   set :static_cache_control, [:public, max_age: 604_800]
 
-  redis = Redis.current = Redis::Namespace.new(:lodestone)
   Scheduler.run
-
-  if message = redis.get(:announcement)
-    Thread.new do
-      Webhooks.send_announcement(message)
-      redis.del(:announcement)
-    end
-  end
 end
 
 get '/' do
