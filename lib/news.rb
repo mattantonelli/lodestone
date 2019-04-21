@@ -9,6 +9,7 @@ module News
   GREETINGS = YAML.load_file('config/greetings.yml').freeze
   WEBHOOK_URL_FORMAT = /https:\/\/discordapp.com\/api\/webhooks\/\d+\/.+/.freeze
   TIMESTAMP_LOCALES = %w(na eu).freeze
+  DATE_REGEX = /\[Date & Time\](.*?)\[/im.freeze
   TIMESTAMP_REGEX = /(\w{3}\.? \d{1,2}, \d{4})? (?:from )?(\d{1,2}:\d{2}(?: [ap]\.m\.)?)(?: \((\w+)\))?/i.freeze
 
   def fetch(type, locale, skip_cache = false)
@@ -151,12 +152,13 @@ module News
       else
         begin
           page = Nokogiri::HTML(open(post[:url]))
-          details = page.at_css('.news__detail__wrapper').text.partition('[Date & Time]').last
+          details = page.at_css('.news__detail__wrapper').text.match(DATE_REGEX)[0]
           times = details.scan(TIMESTAMP_REGEX)
           times = times.take((times.size / 2) * 2) # Only take time pairs
 
           # Add missing date/time zone to each time pair using data from the paired time
           times.each_slice(2) do |slice|
+            slice[1][2].gsub!('BST', '+0100') # Convert BST to offset so it is parsed properly
             slice[0][2] = slice[1][2]
             slice[1][0] ||= slice[0][0]
           end
