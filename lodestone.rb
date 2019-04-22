@@ -30,6 +30,7 @@ configure do
   # Cache static assets for one week
   set :static_cache_control, [:public, max_age: 604_800]
 
+  Redis.current = Redis::Namespace.new(:lodestone)
   Scheduler.run
 end
 
