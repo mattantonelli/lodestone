@@ -110,6 +110,7 @@ end
 
 def track_request
   if settings.production?
-    RestClient.post(GA_URL, { v: 1, tid: GA_TID, cid: SecureRandom.uuid, t: 'pageview', dp: request.path.downcase })
+    RestClient.post(GA_URL, { v: 1, tid: GA_TID, cid: Digest::MD5.hexdigest(request.ip),
+                              t: 'pageview', dp: request.path.downcase })
   end
 end
