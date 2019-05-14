@@ -29,6 +29,10 @@ module News
         # Could not fetch new data, so log the error and return the latest cached data
         LodestoneLogger.error("Error contacting the Lodestone: #{e.to_s}")
         cached(type, locale)
+      rescue RuntimeError => e
+        # Lodestone is undergoing maintenance which results in a redirect, return the latest cached data
+        LodestoneLogger.error("Error contacting the Lodestone: #{e.to_s}")
+        cached(type, locale)
       rescue Exception => e
         LodestoneLogger.error("Fatal error fetching news: #{e.to_s}")
         e.backtrace.each { |line| LodestoneLogger.error(line) }
