@@ -98,7 +98,7 @@ module Webhooks
   private
   # Cache any new post IDs for the given category and return the new posts
   def cache_posts(name, locale, posts)
-    posts.select { |post| Redis.current.sadd("#{locale}-#{name}-ids", post[:id]) }
+    posts.select { |post| Redis.current.sadd("#{locale}-#{name}-ids", post[:id]) }.sort_by { |post| post[:id] }
   end
 
   def embed_post(post, category, locale)
