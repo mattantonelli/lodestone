@@ -2,8 +2,6 @@
 
 Unofficial webhook service and REST API for the [Final Fantasy XIV Lodestone](https://na.finalfantasyxiv.com/lodestone/).
 
-http://na.lodestone.raelys.com/
-
 ## Requirements
 * Ruby ~> 2.4.1
 * [Redis](https://redis.io/)
