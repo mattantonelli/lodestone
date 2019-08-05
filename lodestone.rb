@@ -1,6 +1,7 @@
 require 'sinatra'
 require 'sinatra/json'
 require 'sinatra/custom_logger'
+require 'sinatra/cross_origin'
 require 'logger'
 
 require 'open-uri'
@@ -29,6 +30,10 @@ configure do
 
   # Cache static assets for one week
   set :static_cache_control, [:public, max_age: 604_800]
+
+  # CORS
+  set :allow_origin, :any
+  set :allow_methods, [:get]
 
   Redis.current = Redis::Namespace.new(:lodestone)
   Scheduler.run
@@ -64,6 +69,7 @@ end
 
 get '/news/all' do
   track_request
+  cross_origin
   news = News.all(request_locale)
   headers = NewsCache.headers(:topics, request_locale)
   last_modified headers[:last_modified]
@@ -73,6 +79,7 @@ end
 
 get '/news/feed' do
   track_request
+  cross_origin
   feed = News.feed(request_locale)
   headers = NewsCache.headers(:topics, request_locale)
   last_modified headers[:last_modified]
@@ -82,6 +89,7 @@ end
 
 get '/news/:category' do
   track_request
+  cross_origin
   category = params[:category].downcase
 
   begin
@@ -93,6 +101,13 @@ get '/news/:category' do
   rescue ArgumentError
     halt 400, json(error: 'Invalid news category.')
   end
+end
+
+# CORS preflight requests
+options '*' do
+  response.headers['Allow'] = 'GET,OPTIONS'
+  response.headers['Access-Control-Allow-Headers'] = 'X-Requested-With, X-HTTP-Method-Override, Content-Type, Cache-Control, Accept'
+  200
 end
 
 not_found do
