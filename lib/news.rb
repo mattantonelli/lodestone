@@ -58,6 +58,18 @@ module News
     feed.sort_by { |post| DateTime.parse(post[:time]) }.reverse.first(20)
   end
 
+  def current_maintenance(locale)
+    posts = fetch('maintenance', locale)
+
+    {
+      companion: filter_maintenance(posts, 'Companion'),
+      game: filter_maintenance(posts, 'World'),
+      lodestone: filter_maintenance(posts, 'Lodestone'),
+      mog: filter_maintenance(posts, 'Mog Station'),
+      psn: filter_maintenance(posts, 'PSN')
+    }
+  end
+
   def subscribe(params, locale, validate = false)
     url = params['url']
 
@@ -183,6 +195,22 @@ module News
         end
       end
     end
+  end
+
+  def filter_maintenance(posts, title)
+    time = Time.now
+    latest = posts.select { |post| post[:title].downcase.match?(title.downcase) }
+      .reject { |post| post[:start].nil? || post[:end].nil? }
+      .select { |post| time <= Time.parse(post[:end]) }
+      .sort_by { |post| post[:start] }
+      .first
+
+    if latest
+      latest[:emergency] = latest[:title].downcase.match?('emergency')
+      latest[:current] = time >= Time.parse(latest[:start])
+    end
+
+    latest
   end
 
   def format_time(time)

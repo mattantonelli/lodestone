@@ -103,6 +103,22 @@ get '/news/:category' do
   end
 end
 
+get '/news/maintenance/current' do
+  track_request
+
+  unless %w(na eu).include?(request_locale)
+    halt 500, json(error: 'Current maintenance is only supported for NA and EU.')
+  end
+
+  begin
+    maintenance = News.current_maintenance(request_locale)
+    headers = NewsCache.headers('maintenance', request_locale)
+    last_modified headers[:last_modified]
+    expires headers[:expires], :must_revalidate
+    json maintenance
+  end
+end
+
 # CORS preflight requests
 options '*' do
   response.headers['Allow'] = 'GET,OPTIONS'
