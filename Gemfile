@@ -7,7 +7,7 @@ gem 'sinatra-cross_origin', '~> 0.3.1'
 gem 'rack', '~> 2.0.6'
 
 gem 'json'
-gem 'nokogiri', '~> 1.8.2'
+gem 'nokogiri', '~> 1.10.4'
 gem 'redis-namespace'
 gem 'rest-client'
 gem 'rufus-scheduler'
