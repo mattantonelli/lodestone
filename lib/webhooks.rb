@@ -139,9 +139,14 @@ module Webhooks
   def format_time(post, zone)
     zone = TZInfo::Timezone.get(zone)
     start_time, end_time = post.values_at(:start, :end).map do |time|
+      next if time.nil?
       zone.utc_to_local(Time.parse(time)).strftime("%a, %b %-d %-I:%M %p")
     end
 
-    "#{start_time} to #{end_time} (#{zone.abbreviation})"
+    if end_time.nil?
+      "#{start_time} (#{zone.abbreviation})"
+    else
+      "#{start_time} to #{end_time} (#{zone.abbreviation})"
+    end
   end
 end
