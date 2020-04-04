@@ -123,7 +123,7 @@ module News
       uri = URI.parse("#{BASE_URL}#{item.at_css('a')['href']}")
       uri.host = "#{locale}.#{uri.host}"
       id = uri.to_s.split('/').last
-      title = item.at_css('p').text.gsub(/\[.*\]/, '')
+      title = item.at_css('p').text.gsub(/\[.*\]/, '').strip
       time = item.css('script').text.scan(/\d+/).last.to_i
 
       { id: id, url: uri.to_s, title: title, time: format_time(time) }
@@ -135,7 +135,7 @@ module News
       uri = URI.parse("#{BASE_URL}#{item.at_css('p.news__list--title > a')['href']}")
       uri.host = "#{locale}.#{uri.host}"
       id = uri.to_s.split('/').last
-      title = item.at_css('p.news__list--title').text
+      title = item.at_css('p.news__list--title').text.strip
       time = item.css('script').text.scan(/\d+/).last.to_i
 
       details = item.at_css('div.news__list--banner')
@@ -150,7 +150,7 @@ module News
     page.css('entry').map do |entry|
       url = entry.at_css('link')['href']
       id = entry.at_css('id').text
-      title = entry.at_css('title').text
+      title = entry.at_css('title').text.strip
       time = entry.at_css('published').text
       description = entry.css('content > p').first(2).map { |p| p.text.strip }.reject(&:empty?).join("\n\n")
 
@@ -170,18 +170,18 @@ module News
           page = Nokogiri::HTML(open(post[:url]))
           details = page.at_css('.news__detail__wrapper').text.match(DATE_REGEX)[0]
           times = details.scan(TIMESTAMP_REGEX)
-          times = times.take((times.size / 2) * 2) # Only take time pairs
+          times << [nil, nil, nil] if times.size == 1 # Ensure we have at least one start/end time pair
+          times = times.take((times.size / 2) * 2) # Only take times in pairs
 
           # Add missing date/time zone to each time pair using data from the paired time
           times.each_slice(2) do |slice|
-            slice[1][2].gsub!('BST', '+0100') # Convert BST to offset so it is parsed properly
-            slice[0][2] = slice[1][2]
+            slice[0][2] ||= slice[1][2]
             slice[1][0] ||= slice[0][0]
           end
 
           start_time, end_time = [times.first, times.last].map do |time|
-            raise ArgumentError, "Invalid timestamp '#{time.join(' ')}'" if time.any?(&:nil?)
-            Time.parse(time.join(' ')).utc.strftime('%FT%TZ')
+            next if time.any?(&:nil?)
+            Time.parse(time.join(' ').gsub('BST', '+0100')).utc.strftime('%FT%TZ')
           end
 
           Redis.current.hset(key, post[:id], { start: start_time, end: end_time }.to_json)
