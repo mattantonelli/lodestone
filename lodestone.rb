@@ -8,11 +8,13 @@ require 'open-uri'
 require 'ostruct'
 require 'time'
 require 'thwait'
+require 'tzinfo'
 require 'yaml'
 require 'securerandom'
 
 configure do
   require_relative 'lib/logger.rb'
+  require_relative 'lib/maintenance.rb'
   require_relative 'lib/news.rb'
   require_relative 'lib/scheduler.rb'
   require_relative 'lib/webhooks.rb'

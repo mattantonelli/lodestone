@@ -112,6 +112,8 @@ module Webhooks
       elsif locale == 'eu'
         description = format_time(post, 'GMT')
         description += "\n#{format_time(post, 'Europe/London')}" if TZInfo::Timezone.get('Europe/London').dst?
+      elsif locale == 'de'
+        description = format_time(post, 'Europe/Berlin')
       end
     else
       description = post[:description]
@@ -137,16 +139,32 @@ module Webhooks
   end
 
   def format_time(post, zone)
-    zone = TZInfo::Timezone.get(zone)
+    timezone = TZInfo::Timezone.get(zone)
     start_time, end_time = post.values_at(:start, :end).map do |time|
       next if time.nil?
-      zone.utc_to_local(Time.parse(time)).strftime("%a, %b %-d %-I:%M %p")
+      time = timezone.utc_to_local(Time.parse(time))
+
+      if zone == 'Europe/Berlin'
+        time.strftime("%-d. %b. %H:%M")
+      else
+        time.strftime("%a, %b %-d %-I:%M %p")
+      end
     end
 
     if end_time.nil?
-      "#{start_time} (#{zone.abbreviation})"
+      timestamp = "#{start_time} (#{timezone.abbreviation})"
     else
-      "#{start_time} to #{end_time} (#{zone.abbreviation})"
+      timestamp = "#{start_time} to #{end_time} (#{timezone.abbreviation})"
     end
+
+    if zone == 'Europe/Berlin'
+      timestamp = timestamp.gsub(/[A-Z]{3}(?=,)/i, Maintenance::I18N_DAYS['de'].invert)
+        .gsub(/(?<=, )[A-Z]{3}/i, Maintenance::I18N_MONTHS['de'].invert)
+        .sub(' to ', ' bis ')
+        .sub('CET', 'MEZ')
+        .sub('CEST', 'MESZ')
+    end
+
+    timestamp
   end
 end
