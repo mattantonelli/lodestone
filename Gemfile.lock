@@ -40,7 +40,7 @@ GEM
     nokogiri (1.8.5)
       mini_portile2 (~> 2.3.0)
     raabro (1.1.6)
-    rack (2.0.6)
+    rack (2.2.3)
     rack-protection (2.0.5)
       rack
     rake (12.3.2)
@@ -85,7 +85,7 @@ DEPENDENCIES
   capistrano-rbenv (~> 2.1)
   json
   nokogiri (~> 1.8.2)
-  rack (~> 2.0.6)
+  rack (>= 2.1.3)
   redis-namespace
   rest-client
   rufus-scheduler

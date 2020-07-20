@@ -4,7 +4,7 @@ ruby '~> 2.4.1'
 gem 'sinatra', '2.0.5'
 gem 'sinatra-contrib', '2.0.5'
 gem 'sinatra-cross_origin', '~> 0.3.1'
-gem 'rack', '~> 2.0.6'
+gem 'rack', '>= 2.1.3'
 
 gem 'json'
 gem 'nokogiri', '~> 1.8.2'
