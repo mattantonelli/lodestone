@@ -53,7 +53,7 @@ module News
       posts.each { |post| post[:category] = type }
     end
 
-    feed.sort_by { |post| DateTime.parse(post[:time]) }.reverse.first(20)
+    feed.sort_by { |post| post[:time] }.reverse.first(20)
   end
 
   def current_maintenance(locale)

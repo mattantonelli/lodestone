@@ -83,7 +83,7 @@ module Maintenance
 
   private
   def parse_time(time, locale)
-    time = time.sub('(BST|MEZ)', '+0100')
+    time = time.sub(/(BST|MEZ)/, '+0100')
       .sub('MESZ', '+0200')
 
     if locale == 'de'
