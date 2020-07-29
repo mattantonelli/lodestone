@@ -8,7 +8,7 @@ module News
   BASE_URL = 'http://finalfantasyxiv.com'.freeze
   CATEGORIES = OpenStruct.new(YAML.load_file('config/categories.yml')).freeze
   GREETINGS = YAML.load_file('config/greetings.yml').freeze
-  WEBHOOK_URL_FORMAT = /https:\/\/discordapp.com\/api\/webhooks\/\d+\/.+/.freeze
+  WEBHOOK_URL_FORMAT = /https:\/\/discord.com\/api\/webhooks\/\d+\/.+/.freeze
 
   def fetch(type, locale, skip_cache = false)
     category = CATEGORIES[type]

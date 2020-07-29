@@ -9,7 +9,7 @@ Unofficial webhook service and REST API for the [Final Fantasy XIV Lodestone](ht
 ## Installation
 1. `git clone https://github.com/mattantonelli/lodestone-api`
 2. `bundle install`
-3. [Create a Discord app](https://discordapp.com/developers/applications/me)
+3. [Create a Discord app](https://discord.com/developers/applications/me)
 4. Add the following redirects in the Discord app's OAuth2 settings. Update the host/port appropriately.
     * http://localhost:9292/authorize
     * http://na.localhost:9292/authorize

@@ -5,9 +5,9 @@ module Webhooks
   extend WebhooksResend
 
   CONFIG = OpenStruct.new(YAML.load_file('config/webhook.yml')).freeze
-  AUTHORIZE_URL = 'https://discordapp.com/api/oauth2/authorize'.freeze
-  TOKEN_URL = 'https://discordapp.com/api/oauth2/token'.freeze
-  WEBHOOK_URL = 'https://discordapp.com/api/webhooks'.freeze
+  AUTHORIZE_URL = 'https://discord.com/api/oauth2/authorize'.freeze
+  TOKEN_URL = 'https://discord.com/api/oauth2/token'.freeze
+  WEBHOOK_URL = 'https://discord.com/api/webhooks'.freeze
 
   def execute(type, category, locale)
     name = category['name'].capitalize
