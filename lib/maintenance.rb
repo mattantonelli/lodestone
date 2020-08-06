@@ -4,13 +4,13 @@ module Maintenance
   DATE_REGEX = {
     'na' => /\[Date & Time\](.*?)(?:\[|\z)/im,
     'eu' => /\[Date & Time\](.*?)(?:\[|\z)/im,
-    'de' => /\[Datum & Uhrzeit\](.*?)(?:\[|\z)/im
+    'de' => /\[Datum & (?:Zeit|Uhrzeit)\](.*?)(?:\[|\z)/im
   }.freeze
 
   TIMESTAMP_REGEX = {
     'na' => /(\w{3}\.? \d{1,2}, \d{4})? (?:from )?(\d{1,2}:\d{2}(?: [ap]\.m\.)?)(?: \((\w+)\))?/i,
     'eu' => /(\w{3}\.? \d{1,2}, \d{4})? (?:from )?(\d{1,2}:\d{2}(?: [ap]\.m\.)?)(?: \((\w+)\))?/i,
-    'de' => /(\d{1,2}\. \w{3}\.? \d{4})? (?:von )?(\d{1,2}(?::\d{2})? Uhr)(?: \((\w+)\))?/i
+    'de' => /(\d{1,2}\. \w{3}\.? \d{4})? (?:von |um )?(\d{1,2}(?::\d{2})? Uhr)(?: \((\w+)\))?/i
   }.freeze
 
   I18N_MONTHS = {
