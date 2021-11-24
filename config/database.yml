@@ -1,0 +1,20 @@
+default: &default
+  adapter: mysql2
+  encoding: utf8
+  pool: 5
+  username: <%= Rails.application.credentials.dig(:mysql, Rails.env.to_sym, :username) %>
+  password: <%= Rails.application.credentials.dig(:mysql, Rails.env.to_sym, :password) %>
+  host: localhost
+  port: 3306
+
+development:
+  <<: *default
+  database: lodestone_development
+
+test:
+  <<: *default
+  database: lodestone_test
+
+production:
+  <<: *default
+  database: lodestone_production

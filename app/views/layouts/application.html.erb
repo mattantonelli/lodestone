@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="theme-color" content="D9912B">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+
+    <title>FFXIV Lodestone News</title>
+    <meta property="og:title" content="FFXIV Lodestone News">
+    <meta name="description"
+          content="Automatic Lodestone updates for your Discord server. Available for all Lodestone regions." />
+    <meta property="og:description"
+          content="Automatic Lodestone updates for your Discord server. Available for all Lodestone regions.">
+    <meta property="og:image" content="<%= image_path('logo.png', skip_pipeline: true) %>">
+
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_link_tag 'application', media: 'all' %>
+    <%= javascript_include_tag 'application' %>
+
+    <% if Rails.env.production? && ga_tid.present? %>
+      <script async src="https://www.googletagmanager.com/gtag/js?id=<%= ga_tid %>"></script>
+      <script>
+        window.dataLayer = window.dataLayer || [];
+        window._ga_tid = '<%= ga_tid %>'
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', '<%= ga_tid %>');
+      </script>
+    <% end %>
+  </head>
+
+  <body>
+    <main role="main" class="container<%= ' ja' if I18n.locale == :ja %>">
+      <%= render 'layouts/alerts' %>
+      <%= yield %>
+    </main>
+
+    <footer class="text-center">
+      <span class='d-block d-sm-inline'>Created by Raelys Skyborn of Behemoth</span>
+      <span class="d-none d-sm-inline"> | </span>
+      <div class="d-block d-sm-inline">
+        <%= link_to 'https://discord.gg/UG3bDKawfJ', class: 'unstyled', target: '_blank' do %>
+          <%= image_tag('discord.png', class: 'discord') %>
+        <% end %>
+        <%= link_to 'https://github.com/mattantonelli/lodestone', class: 'unstyled', target: '_blank' do %>
+          <%= image_tag('github.png', class: 'github') %>
+        <% end %>
+        <%= link_to 'https://www.patreon.com/raelys', class: 'unstyled', target: '_blank' do %>
+          <%= image_tag('patreon.png', class: 'patreon') %>
+        <% end %>
+      </div>
+    </footer>
+  </body>
+</html>

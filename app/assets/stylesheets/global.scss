@@ -1,0 +1,109 @@
+@font-face {
+  font-family: 'Noto Sans CJK JP';
+  src: url(asset_path('noto_sans_cjk_jp.otf')) format('opentype');
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  background-color: #333;
+  color: #eee;
+  margin-bottom: 72px;
+
+  @media (max-width: 575px) {
+    margin-bottom: 96px;
+  }
+}
+
+.ja {
+  font-family: 'Noto Sans CJK JP'
+}
+
+footer {
+  position: absolute;
+  bottom: 8px;
+  width: 100%;
+}
+
+a {
+  color: #eee;
+  text-decoration: underline;
+
+  &:hover {
+    color: #fff;
+  }
+}
+
+.btn, .btn:hover {
+  color: #eee;
+  a {
+    cursor: pointer;
+  }
+}
+
+a.unstyled {
+  text-decoration: none;
+}
+
+label, input[type="checkbox"] {
+  cursor: pointer;
+}
+
+input[type="checkbox"] {
+  -webkit-filter: grayscale(100%);
+}
+
+.card {
+  background-color: #333;
+
+  .card-header, .modal-header {
+    background-color: rgba(0, 0, 0, 0.4);
+
+    h5, h6 {
+      margin-bottom: 0;
+    }
+  }
+
+  .card-body, .modal-body {
+    background-color: rgba(0, 0, 0, 0.2);
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+}
+
+.form {
+  label {
+    margin-right: 0.5rem;
+  }
+
+  input.form-control, select.form-control {
+    background-color: rgba(0, 0, 0, 0.05);
+    border-color: #555;
+    color: #eee;
+
+    &:active, &:focus {
+      box-shadow: none;
+      background-color: rgba(0, 0, 0, 0.01);
+      border-color: #777;
+    }
+  }
+}
+
+pre {
+  color: #e83e8c;
+  background-color: rgba(0, 0, 0, 0.2);
+  padding: 0.5rem;
+  white-space: pre-wrap;
+}
+
+.form-check {
+  margin: 0.5rem 0;
+  padding: 0;
+
+  label {
+    margin: 0;
+  }
+}
