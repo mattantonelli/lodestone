@@ -1,5 +1,8 @@
 Rails.application.routes.draw do
-  get 'static/index'
+  resource :webhook, only: [] do
+    post 'subscribe'
+    get 'save'
+  end
 
   root 'static#index'
 end

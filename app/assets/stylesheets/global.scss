@@ -75,8 +75,8 @@ input[type="checkbox"] {
 }
 
 .form {
-  label {
-    margin-right: 0.5rem;
+  .form-group > label {
+    font-weight: bold;
   }
 
   input.form-control, select.form-control {
@@ -89,6 +89,11 @@ input[type="checkbox"] {
       background-color: rgba(0, 0, 0, 0.01);
       border-color: #777;
     }
+  }
+
+  option {
+    background-color: #292929;
+    color: #eee;
   }
 }
 

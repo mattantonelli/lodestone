@@ -6,8 +6,26 @@
       <div class="card-header">
         <h5 class="mb-0">Choose your preferences</h5>
       </div>
-      <div class="card-body pt-3 pb-2">
-        <p>I am a form.</p>
+      <div class="card-body">
+        <%= form_with(url: subscribe_webhook_path, local: true, class: 'form') do |f| %>
+          <div class="form-group">
+            <%= f.label :locale, 'Region' %>
+            <%= f.select :locale, locale_options, {}, class: 'form-control' %>
+          </div>
+          <div class="form-group">
+            <%= label_tag nil, 'Categories', class: 'mb-0' %>
+            <% Lodestone::CATEGORIES.to_h.keys.each do |category| %>
+              <div class="form-check ml-3">
+                <%= check_box_tag category, '1', params[category] == '1', class: 'form-check-input' %>
+                <%= f.label category, class: 'form-check-label' %>
+              </div>
+            <% end %>
+          </div>
+          <div class="text-center">
+            <%= f.submit 'Subscribe', class: 'btn btn-primary' %>
+            <p class="my-2">This requires the <b>Manage Webhooks</b> permission.</p>
+          </div>
+        <% end %>
       </div>
     </div>
   </div>
