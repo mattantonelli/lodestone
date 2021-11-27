@@ -13,8 +13,8 @@
 ActiveRecord::Schema.define(version: 2021_11_25_150352) do
 
   create_table "webhooks", charset: "utf8", force: :cascade do |t|
-    t.string "url"
-    t.string "locale"
+    t.string "url", null: false
+    t.string "locale", null: false
     t.boolean "topics"
     t.boolean "notices"
     t.boolean "maintenance"
