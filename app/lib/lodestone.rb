@@ -1,6 +1,8 @@
 require 'open-uri'
 
 module Lodestone
+  include Lodestone::Maintenance
+
   BASE_URL = 'https://finalfantasyxiv.com'.freeze
   CATEGORIES = OpenStruct.new(YAML.load_file('config/categories.yml')).freeze
   LOCALES = %w(na eu fr de jp).freeze
@@ -17,9 +19,17 @@ module Lodestone
       page = Nokogiri::HTML(URI.open(uri))
       news = parse(page, locale, category)
 
-      news.each do |post|
-        News.create!(post) unless News.exists?(uid: post[:uid])
+      # Don't bother checking for new posts if all of the UIDs already exist
+      unless News.where(uid: news.pluck(:uid)).count == news.size
+        news.each do |post|
+          unless News.exists?(uid: post[:uid])
+            post = add_timestamps(post, locale) if category == 'maintenance' && timestamps_supported?(locale)
+            News.create!(post)
+          end
+        end
       end
+
+      news
     end
   end
 
