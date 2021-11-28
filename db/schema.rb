@@ -10,7 +10,28 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_11_25_150352) do
+ActiveRecord::Schema.define(version: 2021_11_27_200114) do
+
+  create_table "news", charset: "utf8", force: :cascade do |t|
+    t.string "uid", null: false
+    t.string "url", null: false
+    t.string "title", null: false
+    t.datetime "time", null: false
+    t.string "locale", null: false
+    t.string "category", null: false
+    t.boolean "sent", default: false
+    t.string "image"
+    t.text "description"
+    t.datetime "start_time"
+    t.datetime "end_time"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["category"], name: "index_news_on_category"
+    t.index ["created_at"], name: "index_news_on_created_at"
+    t.index ["locale"], name: "index_news_on_locale"
+    t.index ["sent"], name: "index_news_on_sent"
+    t.index ["uid"], name: "index_news_on_uid", unique: true
+  end
 
   create_table "webhooks", charset: "utf8", force: :cascade do |t|
     t.string "url", null: false

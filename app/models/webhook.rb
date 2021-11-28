@@ -15,4 +15,5 @@
 #  updated_at  :datetime         not null
 #
 class Webhook < ApplicationRecord
+  validates_presence_of :url, :locale
 end

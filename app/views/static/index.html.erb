@@ -1,4 +1,4 @@
-<h2 class="text-center mt-2">Automatic Lodestone updates for your Discord server!</h2>
+<h2 class="text-center mt-2">Automatic Lodestone News updates for your Discord server!</h2>
 
 <div class="row mt-4">
   <div class="col-12 col-md-8 offset-md-2 col-lg-6 offset-lg-3">
@@ -14,7 +14,7 @@
           </div>
           <div class="form-group">
             <%= label_tag nil, 'Categories', class: 'mb-0' %>
-            <% Lodestone::CATEGORIES.to_h.keys.each do |category| %>
+            <% Lodestone.categories.each do |category| %>
               <div class="form-check ml-3">
                 <%= check_box_tag category, '1', params[category] == '1', class: 'form-check-input' %>
                 <%= f.label category, class: 'form-check-label' %>

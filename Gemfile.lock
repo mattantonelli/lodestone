@@ -247,6 +247,7 @@ DEPENDENCIES
   rest-client
   sass-rails
   spring
+  tzinfo
   web-console (>= 4.1.0)
   whenever
 

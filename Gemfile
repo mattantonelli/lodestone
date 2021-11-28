@@ -13,6 +13,7 @@ gem 'lograge'
 gem 'whenever'
 gem 'rest-client'
 gem 'nokogiri'
+gem 'tzinfo'
 gem 'bootstrap', '~> 4.3.1'
 
 group :development do
