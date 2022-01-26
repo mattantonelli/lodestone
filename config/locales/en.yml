@@ -1,33 +1,35 @@
-# Files in the config/locales directory are used for internationalization
-# and are automatically loaded by Rails. If you want to use locales other
-# than English, add the necessary files in this directory.
-#
-# To use the locales, use `I18n.t`:
-#
-#     I18n.t 'hello'
-#
-# In views, this is aliased to just `t`:
-#
-#     <%= t('hello') %>
-#
-# To use a different locale, set it with `I18n.locale`:
-#
-#     I18n.locale = :es
-#
-# This would use the information in config/locales/es.yml.
-#
-# The following keys must be escaped otherwise they will not be retrieved by
-# the default I18n backend:
-#
-# true, false, on, off, yes, no
-#
-# Instead, surround them with single quotes.
-#
-# en:
-#   'true': 'foo'
-#
-# To learn more, please read the Rails Internationalization guide
-# available at https://guides.rubyonrails.org/i18n.html.
-
 en:
-  hello: "Hello world"
+  categories:
+    developers: "Developers' Blog"
+    maintenance: "Maintenance"
+    notices: "Notices"
+    status: "Status"
+    topics: "Topics"
+    updates: "Updates"
+  faq:
+    change:
+      text: "To change your subscription, you will need to unsubscribe and then subscribe again with your new preferences."
+      title: "How do I change my subscription?"
+    example:
+      text: "You sure can."
+      title: "Can I see an example post?"
+    title: "FAQ"
+    unsubscribe:
+      text: "Edit Channel &gt; Integrations &gt; Webhooks &gt; Lodestone &gt; Delete Webhook"
+      title: "How do I unsubscribe?"
+    webhook:
+      text: "A webhook is a simple and safe way to let an application send messages to your Discord server. You set the channel where you want it to post, and you can delete the webhook at any time."
+      title: "What is a webhook?"
+  subscribe:
+    categories: "Categories"
+    error:
+      select_one: "You must select at least one category."
+      unknown: "Sorry, there was a problem with your subscription."
+    permission: "This requires the <b>Manage Webhooks</b> permission."
+    preferences: "Choose your preferences"
+    region: "Region"
+    submit: "Subscribe"
+    success:
+      flash: "You are now subscribed to Lodestone News updates."
+      message: "Lodestone News updates will now be posted in this channel."
+    title: "Automatic Lodestone News updates for your Discord server!"

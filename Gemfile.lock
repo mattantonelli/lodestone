@@ -104,6 +104,7 @@ GEM
       domain_name (~> 0.5)
     i18n (1.8.11)
       concurrent-ruby (~> 1.0)
+    i18n_yaml_sorter (0.2.0)
     jbuilder (2.11.3)
       activesupport (>= 5.0.0)
     listen (3.7.0)
@@ -235,6 +236,7 @@ DEPENDENCIES
   capistrano-bundler (~> 1.2)
   capistrano-rails (= 1.4.0)
   capistrano-rbenv (~> 2.1)
+  i18n_yaml_sorter
   jbuilder (~> 2.7)
   listen (~> 3.3)
   lograge

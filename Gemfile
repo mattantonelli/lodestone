@@ -24,6 +24,7 @@ group :development do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
   gem 'listen', '~> 3.3'
   gem 'spring'
+  gem 'i18n_yaml_sorter'
 
   # capistrano
   gem 'capistrano', '3.10.0'

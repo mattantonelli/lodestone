@@ -31,4 +31,8 @@ module Discord
 
     url
   end
+
+  def send_message(url:, message:)
+    RestClient.post(url, { content: message })
+  end
 end
