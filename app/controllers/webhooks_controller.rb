@@ -15,8 +15,8 @@ class WebhooksController < ApplicationController
       if params[:code].present?
         url = Discord.webhook_url(code: params[:code], redirect_uri: save_webhook_url)
         options = decode_options
-        Webhook.create!(options[:categories].merge(url: url, locale: options[:locale]))
-        Discord.send_message(url: url, message: I18n.t('subscribe.success.message'))
+        webhook = Webhook.create!(options[:categories].merge(url: url, locale: options[:locale]))
+        webhook.send_message(I18n.t('subscribe.success.message'))
         flash[:success] = I18n.t('subscribe.success.flash')
       elsif params['error'] != 'access_denied'
         # If the OAuth response is missing the code and was not cancelled by the user, raise an error

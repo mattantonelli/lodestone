@@ -4,7 +4,7 @@ module Lodestone
   include Lodestone::Maintenance
 
   BASE_URL = 'https://finalfantasyxiv.com'.freeze
-  CATEGORIES = OpenStruct.new(YAML.load_file('config/categories.yml')).freeze
+  CATEGORIES = YAML.load_file('config/categories.yml').freeze
   LOCALES = %w(na eu fr de jp).freeze
 
   extend self
@@ -41,6 +41,10 @@ module Lodestone
 
   def self.categories
     CATEGORIES.to_h.keys.freeze
+  end
+
+  def self.category(category)
+    CATEGORIES[category]
   end
 
   def self.locales

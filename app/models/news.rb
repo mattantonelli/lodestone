@@ -31,4 +31,37 @@ class News < ApplicationRecord
   scope :latest, -> { order(created_at: :desc).limit(20) }
   scope :sent,   -> { where(sent: true) }
   scope :unsent, -> { where(sent: false) }
+
+  def embed
+    link = URI.parse(Lodestone.category(category)['link'])
+    link.host = "#{locale}.#{link.host}"
+
+    if start_time.present? || end_time.present?
+      text = formatted_duration
+    else
+      text = description
+    end
+
+    {
+      author: {
+        name: I18n.t("categories.#{category}"),
+        url: link,
+        icon_url: Lodestone.category(category)['icon']
+      },
+      title: title,
+      description: text,
+      url: url,
+      color: Lodestone.category(category)['color'],
+      thumbnail: {
+        url: Lodestone.category(category)['thumbnail']
+      },
+      image: {
+        url: image
+      }
+    }
+  end
+
+  def formatted_duration
+    [start_time, end_time].map { |time| "<t:#{time.to_i}>" }.join(' — ')
+  end
 end

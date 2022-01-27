@@ -20,7 +20,7 @@ module Discord
                                { client_id: Rails.application.credentials.dig(:discord, :client_id),
                                  client_secret: Rails.application.credentials.dig(:discord, :client_secret),
                                  grant_type: 'authorization_code', code: code, redirect_uri: redirect_uri },
-                               { content_type: 'application/x-www-form-urlencoded' })
+                                 { content_type: 'application/x-www-form-urlencoded' })
 
     webhook = JSON.parse(response, symbolize_names: true)[:webhook]
     url = "#{WEBHOOK_URL}/#{webhook[:id]}/#{webhook[:token]}"
@@ -30,9 +30,5 @@ module Discord
     end
 
     url
-  end
-
-  def send_message(url:, message:)
-    RestClient.post(url, { content: message })
   end
 end
