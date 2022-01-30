@@ -23,26 +23,21 @@ class Webhook < ApplicationRecord
 
   def send_embeds(embeds)
     begin
-      # Send up to 10 embeds per execution to reduce requests
-      embeds.each_slice(10).each do |slice|
-        body = { embeds: slice }.to_json
-        response = RestClient.post(url, body, content_type: :json)
+      body = { embeds: embeds }.to_json
+      response = RestClient.post(url, body, content_type: :json)
 
-        # Respect the dynamic rate limit
-        if response.headers[:x_ratelimit_remaining] == '0'
-          time = response.headers[:x_ratelimit_reset].to_i - Time.now.to_i
-          sleep(time) if time.positive?
-        end
+      # Respect the dynamic rate limit
+      if response.headers[:x_ratelimit_remaining] == '0'
+        time = response.headers[:x_ratelimit_reset].to_i - Time.now.to_i
+        sleep(time) if time.positive?
       end
     rescue RestClient::ExceptionWithResponse => e
       if JSON.parse(e.response)['code'] == 10015
         # Webhook has been deleted from the channel, so delete it from the database
-        webhook.destroy
+        destroy
       else
-        Rails.logger.error(e.inspect)
+        raise
       end
-    rescue Exception => e
-      Rails.logger.error(e.inspect)
     end
   end
 
