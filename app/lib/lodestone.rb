@@ -9,7 +9,7 @@ module Lodestone
 
   extend self
 
-  def fetch(locale:, category:, skip_cache: false)
+  def fetch(locale:, category:)
     config = CATEGORIES[category]
 
     uri = URI.parse(config['url'])
@@ -28,8 +28,6 @@ module Lodestone
           end
         end
       end
-
-      news
     end
   end
 

@@ -15,11 +15,27 @@ namespace :news do
 
   private
   def deliver(locale:, category:)
+    # Fetch the latest news from the Lodestone
+    begin
+      Lodestone.fetch(locale: locale, category: category)
+    rescue OpenURI::HTTPError => e
+      return log("Error contacting the Lodestone: #{e.to_s}")
+    rescue RuntimeError => e
+      # Lodestone is undergoing maintenance which results in a redirect
+      return log("Error contacting the Lodestone: #{e.to_s}")
+    rescue Exception => e
+      log("Fatal error fetching news: #{e.to_s}")
+      e.backtrace.first(5) { |line| log(line) }
+      return
+    end
+
+    # Retrieve any unsent posts
     news = News.unsent.where(locale: locale, category: category)
 
+    # And deliver them
     begin
       if news.present?
-        puts "Delivering #{news.count} new posts to #{locale.upcase} #{category.capitalize}"
+        log("Found #{news.count} new posts for #{locale.upcase} #{category.capitalize}")
 
         # Send up to 10 embeds per execution to reduce requests
         news.map(&:embed).each_slice(10).each do |embeds|
@@ -28,14 +44,19 @@ namespace :news do
           end
         end
 
-        puts "Delivery complete for #{locale.upcase} #{category.capitalize}"
+        log("Delivery complete for #{locale.upcase} #{category.capitalize}")
       end
-    rescue
-      puts "Delivery failed\n#{e.inspect}"
+    rescue Exception => e
+      log("Delivery failed for #{locale.upcase} #{category.capitalize}\n#{e.to_s}")
+      e.backtrace.first(5) { |line| log(line) }
     ensure
       # Always mark the news as sent regardless of status to avoid infinitely sending
       # duplicate posts in the event of an error
       news.update_all(sent: true)
     end
+  end
+
+  def log(message)
+    puts "[#{Time.now.strftime('%Y-%m-%d %H:%M:%S %Z')}] #{message}"
   end
 end

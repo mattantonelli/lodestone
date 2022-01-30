@@ -10,7 +10,7 @@ gem 'rack-cors'
 gem 'jbuilder', '~> 2.7'
 gem 'bootsnap', '>= 1.4.4', require: false
 gem 'lograge'
-gem 'whenever'
+gem 'whenever', require: false
 gem 'rest-client'
 gem 'nokogiri'
 gem 'tzinfo'
