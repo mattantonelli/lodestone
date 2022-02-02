@@ -9,6 +9,7 @@ namespace :news do
     else
       Lodestone.categories.each do |cat|
         deliver(locale: locale, category: cat)
+        sleep(3) # Take a quick nap to avoid Lodestone rate limits
       end
     end
   end
@@ -39,8 +40,15 @@ namespace :news do
 
         # Send up to 10 embeds per execution to reduce requests
         news.map(&:embed).each_slice(10).each do |embeds|
-          Webhook.where(locale: locale, category => true).shuffle.each do |webhook|
-            webhook.send_embeds(embeds)
+          # Collect the webhooks where the news should be sent. Shuffle them for fairness, and take them in
+          # slices of 20 so we can multithread them for faster execution. Each webhook has its own rate limit.
+          Webhook.where(locale: locale, category => true).shuffle.each_slice(20) do |webhooks|
+            threads = webhooks.map do |webhook|
+              Thread.new { webhook.send_embeds(embeds) }
+            end
+
+            # Wait for all of the threads before proceeding to the next slice
+            threads.map(&:join)
           end
         end
 
