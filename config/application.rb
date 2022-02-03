@@ -14,5 +14,12 @@ module LodestoneNews
 
     config.generators.system_tests = nil
     config.web_console.permissions = '10.0.2.2'
+
+    config.middleware.insert_before 0, Rack::Cors do
+      allow do
+        origins '*'
+        resource '/news/*', headers: :any, methods: [:get, :options]
+      end
+    end
   end
 end
