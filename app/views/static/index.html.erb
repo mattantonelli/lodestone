@@ -31,27 +31,12 @@
   </div>
 </div>
 
-<div class="row mt-4">
-  <div class="col-12 col-md-8 offset-md-2">
-    <div class="card">
-      <div class="card-header">
-        <h5 class="mb-0"><%= t('faq.title') %></h5>
-      </div>
-      <div class="card-body pt-3 pb-2">
-        <h5><%= t('faq.example.title') %></h5>
-        <p>
-          <%= link_to t('faq.example.text'), image_path('example.png', skip_pipeline: true), target: '_blank' %>
-        </p>
-
-        <h5><%= t('faq.webhook.title') %></h5>
-        <p><%= t('faq.webhook.text') %></p>
-
-        <h5><%= t('faq.change.title') %></h5>
-        <p><%= t('faq.change.text') %></p>
-
-        <h5><%= t('faq.unsubscribe.title') %></h5>
-        <p><%= t('faq.unsubscribe.text').html_safe %></p>
-      </div>
+<div class="row mt-3">
+  <div class="col-12">
+    <div class="text-center">
+      <%= link_to t('social.discord'), 'https://discord.gg/UG3bDKawfJ', class: 'btn discord mt-2', target: '_blank' %>
+      <%= link_to t('social.github'), docs_path, class: 'btn github mt-2', target: '_blank' %>
+      <%= link_to t('social.patreon'), 'https://www.patreon.com/raelys', class: 'btn patreon mt-2', target: '_blank' %>
     </div>
   </div>
 </div>

@@ -6,20 +6,10 @@ en:
     status: "Status"
     topics: "Topics"
     updates: "Updates"
-  faq:
-    change:
-      text: "To change your subscription, you will need to unsubscribe and then subscribe again with your new preferences."
-      title: "How do I change my subscription?"
-    example:
-      text: "You sure can."
-      title: "Can I see an example post?"
-    title: "FAQ"
-    unsubscribe:
-      text: "Edit Channel &gt; Integrations &gt; Webhooks &gt; Lodestone &gt; Delete Webhook"
-      title: "How do I unsubscribe?"
-    webhook:
-      text: "A webhook is a simple and safe way to let an application send messages to your Discord server. You set the channel where you want it to post, and you can delete the webhook at any time."
-      title: "What is a webhook?"
+  social:
+    discord: "Discuss on Discord"
+    github: "API Documentation"
+    patreon: "Support on Patreon"
   subscribe:
     categories: "Categories"
     error:

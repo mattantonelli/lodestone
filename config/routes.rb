@@ -23,5 +23,7 @@ Rails.application.routes.draw do
   match 'news/*path', via: :all, to: -> (_) { [404, { 'Content-Type' => 'application/json' },
                                               ['{"status": 404, "error": "Not found"}'] ] }
 
+  get 'docs', to: redirect('https://documenter.getpostman.com/view/1779678/TzXzDHVk')
+
   root 'static#index'
 end

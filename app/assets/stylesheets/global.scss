@@ -35,6 +35,10 @@ a {
   &:hover {
     color: #fff;
   }
+
+  &.btn {
+    text-decoration: none;
+  }
 }
 
 .btn, .btn:hover {
