@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  get 'locale/set', to: 'locale#update'
+
   resource :webhook, only: [] do
     post 'subscribe'
     get 'save'

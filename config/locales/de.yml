@@ -1,0 +1,25 @@
+de:
+  categories:
+    developers: "Offizielles Blog"
+    maintenance: "Wartung"
+    notices: "Hinweise"
+    status: "Status"
+    topics: "Artikel"
+    updates: "Updates"
+  social:
+    discord: "Diskutiere auf Discord"
+    github: "API Dokumentation"
+    patreon: "Unterstütze auf Patreon"
+  subscribe:
+    categories: "Kategorien"
+    error:
+      select_one: "Du musst mindestens eine Kategorie auswählen."
+      unknown: "Entschuldige, es gab ein Problem mit deinem Abo."
+    permission: "Dafür brauchst du die <b>Manage Webhooks</b> Rechte."
+    preferences: "Wähle deine Präferenzen"
+    region: "Region"
+    submit: "Abonniere"
+    success:
+      flash: "Du hast nun die Lodestone News Updates abonniert."
+      message: "Die Lodestone News Updates werden jetzt in diesen Channel gepostet."
+    title: "Automatische Lodestone News Updates für deinen Discord Server!"

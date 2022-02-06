@@ -1,0 +1,25 @@
+fr:
+  categories:
+    developers: "Blog officiel"
+    maintenance: "Maintenance"
+    notices: "Informations"
+    status: "État"
+    topics: "À la une"
+    updates: "Mises à jour"
+  social:
+    discord: "Rejoins nous sur Discord"
+    github: "Documentation de l'API"
+    patreon: "Soutien via Patreon"
+  subscribe:
+    categories: "Catégories"
+    error:
+      select_one: "Vous devez sélectionner au moins une catégorie."
+      unknown: "Un problème est survenu lors de votre abonnement."
+    permission: "Ceci requiert la permission via le <b>paramétrage des Webhooks</b>."
+    preferences: "Choisissez vos préférences"
+    region: "Région"
+    submit: "Abonnement"
+    success:
+      flash: "Vous êtes maintenant abonné aux actualités Lodestone. Hourra !"
+      message: "Les actualités Lodestones vont maintenant être postées sur ce canal."
+    title: "L'actualité Lodestone en temps réel sur votre serveur Discord!"
