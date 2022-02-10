@@ -1,6 +1,6 @@
 class NewsController < ApplicationController
   before_action :set_defaults
-  before_action :set_news, only: [:topics, :notices, :maintenance, :updates, :status, :developers]
+  before_action :render_news, only: [:topics, :notices, :maintenance, :updates, :status, :developers]
 
   def topics
   end
@@ -21,15 +21,35 @@ class NewsController < ApplicationController
   end
 
   def current_maintenance
-    # TODO: this
+    @maintenance = { companion: [], game: [], lodestone: [], mog: [], psn: [] }
+    @include_current = true
+
+    news = News.where(locale: @locale)
+      .where('end_time >= ?', Time.now)
+      .where.not(start_time: nil)
+      .order(created_at: :desc)
+
+    news.each do |post|
+      case post.title.downcase
+      when /companion/ then @maintenance[:companion] << post
+      when /world|data center/ then @maintenance[:game] << post
+      when /lodestone/ then @maintenance[:lodestone] << post
+      when /online store/ then @maintenance[:mog] << post
+      when /psn/ then @maintenance[:psn] << post
+      end
+    end
   end
 
   def feed
-    # TODO: this
+    @news = News.where(locale: @locale).order(created_at: :desc).first(@limit)
+    @include_category = true
+    render 'basic'
   end
 
   def all
-    # TODO: this
+    @news = Lodestone.categories.each_with_object({}) do |category, h|
+      h[category] = News.where(locale: @locale, category: category).order(created_at: :desc).first(@limit)
+    end
   end
 
   private
@@ -50,7 +70,8 @@ class NewsController < ApplicationController
     end
   end
 
-  def set_news
+  def render_news
     @news = News.where(locale: @locale, category: @category).order(created_at: :desc).first(@limit)
+    render 'basic'
   end
 end
