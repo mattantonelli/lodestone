@@ -62,6 +62,6 @@ class News < ApplicationRecord
   end
 
   def formatted_duration
-    [start_time, end_time].map { |time| "<t:#{time.to_i}>" }.join(' — ')
+    [start_time, end_time].compact.map { |time| "<t:#{time.to_i}>" }.join(' — ')
   end
 end
