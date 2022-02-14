@@ -64,4 +64,8 @@ class News < ApplicationRecord
   def formatted_duration
     [start_time, end_time].compact.map { |time| "<t:#{time.to_i}>" }.join(' — ')
   end
+
+  def self.metadata(locale:)
+    NewsMeta.find_by(locale: locale)
+  end
 end

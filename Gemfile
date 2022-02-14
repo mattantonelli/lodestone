@@ -20,7 +20,6 @@ group :development do
   gem 'puma', '~> 5.0'
   gem 'annotate'
   gem 'web-console', '>= 4.1.0'
-  gem 'rack-mini-profiler', '~> 2.0'
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
   gem 'listen', '~> 3.3'
   gem 'spring'

@@ -7,6 +7,9 @@ namespace :news do
     if category.present?
       deliver(locale: locale, category: category)
     else
+      # Update the metadata with the current fetch time so we can set the proper API cache headers
+      News.metadata(locale: locale).update(modified_at: Time.now.beginning_of_minute)
+
       Lodestone.categories.each do |cat|
         deliver(locale: locale, category: cat)
         sleep(3) # Take a quick nap to avoid Lodestone rate limits

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_11_27_200114) do
+ActiveRecord::Schema.define(version: 2022_02_14_202731) do
 
   create_table "news", charset: "utf8", force: :cascade do |t|
     t.string "uid", null: false
@@ -31,6 +31,13 @@ ActiveRecord::Schema.define(version: 2021_11_27_200114) do
     t.index ["locale"], name: "index_news_on_locale"
     t.index ["sent"], name: "index_news_on_sent"
     t.index ["uid"], name: "index_news_on_uid", unique: true
+  end
+
+  create_table "news_meta", charset: "utf8", force: :cascade do |t|
+    t.string "locale"
+    t.datetime "modified_at"
+    t.datetime "expires_at"
+    t.index ["locale"], name: "index_news_meta_on_locale"
   end
 
   create_table "webhooks", charset: "utf8", force: :cascade do |t|

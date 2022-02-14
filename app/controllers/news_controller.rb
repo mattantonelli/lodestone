@@ -1,5 +1,6 @@
 class NewsController < ApplicationController
   before_action :set_defaults
+  before_action :set_headers
   before_action :render_news, only: [:topics, :notices, :maintenance, :updates, :status, :developers]
 
   def topics
@@ -68,6 +69,13 @@ class NewsController < ApplicationController
     elsif @limit > 20
       @limit = 20
     end
+  end
+
+  def set_headers
+    meta = News.metadata(locale: @locale)
+    expires_in(meta.max_age, must_revalidate: true, public: true)
+    response.set_header('Last-Modified', meta.modified_at)
+    response.set_header('Expires', meta.expires_at)
   end
 
   def render_news
