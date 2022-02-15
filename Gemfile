@@ -26,8 +26,8 @@ group :development do
   gem 'i18n_yaml_sorter'
 
   # capistrano
-  gem 'capistrano', '3.10.0'
-  gem 'capistrano-bundler', '~> 1.2'
-  gem 'capistrano-rbenv', '~> 2.1'
-  gem 'capistrano-rails', '1.4.0'
+  gem 'capistrano', '3.16.0'
+  gem 'capistrano-bundler'
+  gem 'capistrano-rbenv'
+  gem 'capistrano-rails'
 end
