@@ -23,6 +23,16 @@ class NewsController < ApplicationController
   def developers
   end
 
+  def post
+    @post = News.find_by(uid: params[:id])
+
+    if @post.present?
+      render '_post', locals: { post: @post }
+    else
+      render_not_found
+    end
+  end
+
   def current_maintenance
     @maintenance = { companion: [], game: [], lodestone: [], mog: [], psn: [] }
     @include_current = true
@@ -83,5 +93,9 @@ class NewsController < ApplicationController
   def render_news
     @news = News.where(locale: @locale, category: @category).order(created_at: :desc).first(@limit)
     render 'basic'
+  end
+
+  def render_not_found
+    render json: { status: 404, error: 'Not found' }, status: :not_found
   end
 end

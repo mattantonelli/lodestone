@@ -16,6 +16,7 @@ Rails.application.routes.draw do
       get 'status'
       get 'developers'
 
+      get 'post/:id', action: 'post', as: :post
       get 'maintenance/current', action: 'current_maintenance'
       get 'feed'
       get 'all'
