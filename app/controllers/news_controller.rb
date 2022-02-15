@@ -1,4 +1,6 @@
 class NewsController < ApplicationController
+  skip_before_action :set_locale # Do not set the locale cookie for API calls
+
   before_action :set_defaults
   before_action :set_headers
   before_action :render_news, only: [:topics, :notices, :maintenance, :updates, :status, :developers]
