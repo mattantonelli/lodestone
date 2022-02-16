@@ -17,6 +17,14 @@
 class Webhook < ApplicationRecord
   validates_presence_of :url, :locale
 
+  Lodestone.categories.each do |category|
+    scope category, -> { where(category => true) }
+  end
+
+  Lodestone.locales.each do |locale|
+    scope locale, -> { where(locale: locale) }
+  end
+
   def send_embed(embed)
     send_embeds([embed])
   end
