@@ -125,7 +125,7 @@ GEM
     method_source (1.0.0)
     mime-types (3.4.1)
       mime-types-data (~> 3.2015)
-    mime-types-data (3.2022.0105)
+    mime-types-data (3.2021.1115)
     mini_mime (1.1.2)
     minitest (5.15.0)
     msgpack (1.4.4)
@@ -239,6 +239,7 @@ DEPENDENCIES
   jbuilder (~> 2.7)
   listen (~> 3.3)
   lograge
+  mime-types-data (= 3.2021.1115)
   mysql2 (~> 0.5)
   nokogiri
   puma (~> 5.0)
