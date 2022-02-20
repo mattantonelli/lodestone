@@ -17,7 +17,6 @@ All of this application's data is made available through a RESTful JSON API. See
 git clone https://github.com/mattantonelli/lodestone-rails
 cd lodestone-rails
 bundle install
-bundle exec bin/rails app:update:bin
 ```
 
 #### Set up the database
