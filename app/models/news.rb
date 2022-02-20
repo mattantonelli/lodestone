@@ -36,6 +36,12 @@ class News < ApplicationRecord
     link = URI.parse(Lodestone.category(category)['link'])
     link.host = "#{locale}.#{link.host}"
 
+    if locale == 'na' || locale == 'eu'
+      language = 'en'
+    else
+      language = locale
+    end
+
     if start_time.present? || end_time.present?
       text = formatted_duration
     else
@@ -44,7 +50,7 @@ class News < ApplicationRecord
 
     {
       author: {
-        name: I18n.t("categories.#{category}"),
+        name: I18n.t("categories.#{category}", locale: language),
         url: link,
         icon_url: Lodestone.category(category)['icon']
       },
