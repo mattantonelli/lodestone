@@ -2,6 +2,7 @@ class NewsController < ApplicationController
   skip_before_action :set_locale # Do not set the locale cookie for API calls
 
   before_action :set_defaults, :set_headers, :track_request
+  before_action :check_freshness, except: [:post]
   before_action :render_news, only: [:topics, :notices, :maintenance, :updates, :status, :developers]
 
   GA_URL = 'www.google-analytics.com/collect'.freeze
@@ -90,6 +91,10 @@ class NewsController < ApplicationController
     expires_in(meta.max_age, must_revalidate: true, public: true)
     response.set_header('Last-Modified', meta.modified_at)
     response.set_header('Expires', meta.expires_at)
+  end
+
+  def check_freshness
+    fresh_when(last_modified: News.metadata(locale: @locale).modified_at)
   end
 
   def render_news
