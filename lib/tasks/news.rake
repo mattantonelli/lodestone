@@ -39,7 +39,7 @@ namespace :news do
     # And deliver them
     begin
       if news.present?
-        log("Found #{news.count} new posts for #{locale.upcase} #{category.capitalize}")
+        log("Found #{news.count} new posts for #{locale.upcase} #{category.capitalize} (#{news.pluck(:uid).join(', ')})")
 
         # Send up to 10 embeds per execution to reduce requests
         news.map(&:embed).each_slice(10).each do |embeds|
