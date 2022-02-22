@@ -41,6 +41,11 @@ namespace :news do
       if news.present?
         log("Found #{news.count} new posts for #{locale.upcase} #{category.capitalize} (#{news.pluck(:uid).join(', ')})")
 
+        # Always mark the news as sent regardless of status to avoid infinitely sending
+        # duplicate posts in the event of an error. Update posts individually to avoid
+        # modifying the Relation.
+        news.each { |post| post.update(sent: true) }
+
         # Send up to 10 embeds per execution to reduce requests
         news.map(&:embed).each_slice(10).each do |embeds|
           # Collect the webhooks where the news should be sent. Shuffle them for fairness, and take them in
@@ -60,10 +65,6 @@ namespace :news do
     rescue Exception => e
       log("Delivery failed for #{locale.upcase} #{category.capitalize}\n#{e.to_s}")
       e.backtrace.first(5) { |line| log(line) }
-    ensure
-      # Always mark the news as sent regardless of status to avoid infinitely sending
-      # duplicate posts in the event of an error
-      news.update_all(sent: true)
     end
   end
 
