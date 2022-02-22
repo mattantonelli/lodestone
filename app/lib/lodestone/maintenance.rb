@@ -77,6 +77,8 @@ module Lodestone::Maintenance
   def parse_time(time, locale)
     time = time.sub(/(BST|MEZ)/, '+0100')
       .sub('MESZ', '+0200')
+      .sub('AEST', '+1000')
+      .sub('AEDT', '+1100')
 
     if locale == 'de'
       time = time.gsub(/(?<!:\d{2}) Uhr/, ':00')
