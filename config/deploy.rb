@@ -1,7 +1,7 @@
 lock "~> 3.16.0"
 
 set :application, 'lodestone'
-set :repo_url,    'https://github.com/mattantonelli/lodestone-rails'
+set :repo_url,    'https://github.com/mattantonelli/lodestone'
 set :branch,      ENV['BRANCH_NAME'] || 'master'
 set :deploy_to,   '/var/rails/lodestone'
 set :default_env, { path: '$HOME/.rbenv/shims:$HOME/.rbenv/bin:$PATH' }
@@ -16,16 +16,6 @@ namespace :deploy do
     on roles(:app) do
       # Application credentials
       execute :ln, '-s', shared_path.join('master.key'), release_path.join('config/master.key')
-    end
-  end
-
-  before :updated, :update_bin do
-    on roles(:app) do
-      within release_path do
-        with rails_env: fetch(:rails_env) do
-          execute :rake, 'app:update:bin'
-        end
-      end
     end
   end
 
