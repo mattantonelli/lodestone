@@ -52,7 +52,14 @@ namespace :news do
           # slices of 20 so we can multithread them for faster execution. Each webhook has its own rate limit.
           Webhook.where(locale: locale, category => true).shuffle.each_slice(20) do |webhooks|
             threads = webhooks.map do |webhook|
-              Thread.new { webhook.send_embeds(embeds) }
+              Thread.new do
+                begin
+                  webhook.send_embeds(embeds)
+                rescue Exception => e
+                  log("Missed a delivery for #{locale.upcase} #{category.capitalize}")
+                  log_exception(e)
+                end
+              end
             end
 
             # Wait for all of the threads before proceeding to the next slice
@@ -64,11 +71,16 @@ namespace :news do
       end
     rescue Exception => e
       log("Delivery failed for #{locale.upcase} #{category.capitalize}\n#{e.to_s}")
-      e.backtrace.first(5) { |line| log(line) }
+      log_exception(e)
     end
   end
 
   def log(message)
     puts "[#{Time.now.strftime('%Y-%m-%d %H:%M:%S %Z')}] #{message}"
+  end
+
+  def log_exception(exception)
+    log(exception.inspect)
+    exception.backtrace.first(5).each { |line| log(line) }
   end
 end
