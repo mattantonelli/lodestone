@@ -12,7 +12,7 @@ gem 'bootsnap', '>= 1.4.4', require: false
 gem 'lograge'
 gem 'whenever', require: false
 gem 'rest-client'
-gem 'nokogiri'
+gem 'nokogiri', '>= 1.13.2'
 gem 'tzinfo'
 gem 'bootstrap', '~> 4.3.1'
 gem 'mime-types-data', '3.2021.1115' # TODO: See https://github.com/mime-types/mime-types-data/pull/50
