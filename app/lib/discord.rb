@@ -26,7 +26,7 @@ module Discord
     url = "#{WEBHOOK_URL}/#{webhook[:id]}/#{webhook[:token]}"
 
     unless url.match?(WEBHOOK_URL_FORMAT)
-      raise Exception.new("Invalid webhook URL: #{url}")
+      raise ArgumentError.new("Invalid webhook URL: #{url}")
     end
 
     url

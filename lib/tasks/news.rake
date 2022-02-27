@@ -27,7 +27,7 @@ namespace :news do
     rescue RuntimeError => e
       # Lodestone is undergoing maintenance which results in a redirect
       return log("Error contacting the Lodestone: #{e.to_s}")
-    rescue Exception => e
+    rescue StandardError => e
       log("Fatal error fetching news: #{e.to_s}")
       e.backtrace.first(5) { |line| log(line) }
       return
@@ -55,7 +55,11 @@ namespace :news do
               Thread.new do
                 begin
                   webhook.send_embeds(embeds)
-                rescue Exception => e
+                rescue JSON::ParserError
+                  log("Missed a delivery for #{locale.upcase} #{category.capitalize}. Discord server error.")
+                rescue ArgumentError => e
+                  log("Missed a delivery for #{locale.upcase} #{category.capitalize}. #{e.message}")
+                rescue StandardError => e
                   log("Missed a delivery for #{locale.upcase} #{category.capitalize}")
                   log_exception(e)
                 end
@@ -69,7 +73,7 @@ namespace :news do
 
         log("Delivery complete for #{locale.upcase} #{category.capitalize}")
       end
-    rescue Exception => e
+    rescue StandardError => e
       log("Delivery failed for #{locale.upcase} #{category.capitalize}\n#{e.to_s}")
       log_exception(e)
     end

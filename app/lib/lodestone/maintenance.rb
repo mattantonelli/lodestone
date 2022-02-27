@@ -44,7 +44,7 @@ module Lodestone::Maintenance
 
       post[:start_time] = start_time
       post[:end_time] = end_time
-    rescue Exception => e
+    rescue StandardError => e
       Rails.logger.error("Fatal error adding timestamps for #{post[:url]}")
       Rails.logger.error(e.to_s)
     end

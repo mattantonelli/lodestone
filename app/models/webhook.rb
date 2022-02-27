@@ -40,11 +40,13 @@ class Webhook < ApplicationRecord
         sleep(time) if time.positive?
       end
     rescue RestClient::ExceptionWithResponse => e
-      if JSON.parse(e.response)['code'] == 10015
+      response = JSON.parse(e.response)
+
+      if response['code'] == 10015
         # Webhook has been deleted from the channel, so delete it from the database
         destroy
       else
-        raise
+        raise ArgumentError.new("Received an unhandled Discord error code: #{response['code']}")
       end
     end
   end

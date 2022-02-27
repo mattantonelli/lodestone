@@ -24,7 +24,7 @@ class WebhooksController < ApplicationController
         Rails.logger.error(params)
         flash[:error] = I18n.t('subscribe.error.unknown')
       end
-    rescue Exception => e
+    rescue StandardError => e
       Rails.logger.error(e.inspect)
       flash[:error] = I18n.t('subscribe.error.unknown')
     end
