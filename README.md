@@ -14,8 +14,8 @@ All of this application's data is made available through a RESTful JSON API. See
 ## Installation
 #### Clone and initialize the repository
 ```
-git clone https://github.com/mattantonelli/lodestone-rails
-cd lodestone-rails
+git clone https://github.com/mattantonelli/lodestone
+cd lodestone
 bundle install
 ```
 
@@ -28,7 +28,7 @@ Create the MySQL databases `lodestone_development` as well as a database user wi
 2. Configure the credentials file to match the format below using your data.
 ```
 rm config/credentials.yml.enc
-rails credentials:edit
+bin/rails credentials:edit
 ```
 ```yml
 mysql:
