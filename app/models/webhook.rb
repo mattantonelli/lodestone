@@ -39,8 +39,7 @@ class Webhook < ApplicationRecord
 
       # Respect the dynamic rate limit
       if response.headers[:x_ratelimit_remaining] == '0'
-        time = response.headers[:x_ratelimit_reset].to_i - Time.now.to_i
-        sleep(time) if time.positive?
+        sleep(response.headers[:x_ratelimit_reset_after].to_f)
       end
     rescue RestClient::ExceptionWithResponse => e
       if e.response.headers[:content_type] == 'application/json'
