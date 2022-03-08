@@ -39,6 +39,8 @@ class Webhook < ApplicationRecord
         time = response.headers[:x_ratelimit_reset].to_i - Time.now.to_i
         sleep(time) if time.positive?
       end
+    rescue RestClient::RequestTimeout => e
+      raise StandardError.new('Request timed out.')
     rescue RestClient::ExceptionWithResponse => e
       response = JSON.parse(e.response)
 
