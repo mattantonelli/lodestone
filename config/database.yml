@@ -6,6 +6,7 @@ default: &default
   password: <%= Rails.application.credentials.dig(:mysql, Rails.env.to_sym, :password) %>
   host: localhost
   port: 3306
+  reconnect: true
 
 development:
   <<: *default
