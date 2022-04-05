@@ -42,7 +42,7 @@ class Webhook < ApplicationRecord
         sleep(response.headers[:x_ratelimit_reset_after].to_f)
       end
     rescue RestClient::ExceptionWithResponse => e
-      if e.response.headers[:content_type] == 'application/json'
+      if e.response&.headers[:content_type] == 'application/json'
         # Check the Discord error code for valid JSON responses and handle appropriately
         response = JSON.parse(e.response)
 
