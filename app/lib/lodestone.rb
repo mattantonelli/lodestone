@@ -1,40 +1,39 @@
-require 'open-uri'
+require 'net/http'
 
 module Lodestone
   include Lodestone::Maintenance
 
   BASE_URL = 'https://finalfantasyxiv.com'.freeze
+  LODESTONE_URL = 'https://finalfantasyxiv.com/lodestone'.freeze
+  DEVELOPERS_URL = 'https://finalfantasyxiv.com/pr/blog/atom.xml'.freeze
   CATEGORIES = YAML.load_file('config/categories.yml').freeze
   LOCALES = %w(na eu fr de jp).freeze
 
   extend self
 
-  def fetch(locale:, category:)
-    config = CATEGORIES[category]
-
-    uri = URI.parse(config['url'])
+  def fetch_news(locale:)
+    uri = URI.parse(LODESTONE_URL)
     uri.host = "#{locale}.#{uri.host}"
 
-    begin
-      page = Nokogiri::HTML(URI.open(uri))
-      news = parse(page, locale, category)
+    page = Nokogiri::HTML(Net::HTTP.get_response(uri).body)
+    news = parse_news(page, locale)
 
-      # Don't bother checking for new posts if all of the UIDs already exist
-      unless News.where(uid: news.pluck(:uid)).count == news.size
-        news.each do |post|
-          unless News.exists?(uid: post[:uid])
-            post = add_timestamps(post, locale) if category == 'maintenance' && timestamps_supported?(locale)
-            News.create!(post)
-          end
-        end
-      end
-    end
+    create_posts(locale: locale, news: news)
+  end
+
+  def fetch_blog(locale:)
+    uri = URI.parse(DEVELOPERS_URL)
+    uri.host = "#{locale}.#{uri.host}"
+
+    page = Nokogiri::HTML(URI.open(uri))
+    news = parse_blog(page, locale)
+
+    create_posts(locale: locale, news: news)
   end
 
   def fetch_all(locale:)
-    Lodestone.categories.each do |category|
-      news = fetch(locale: locale, category: category.to_s)
-    end
+    fetch_news(locale: locale)
+    fetch_blog(locale: locale)
   end
 
   def self.categories
@@ -50,34 +49,43 @@ module Lodestone
   end
 
   private
+  def create_posts(locale:, news:)
+    # Don't bother checking for new posts if all of the UIDs already exist
+    unless News.where(uid: news.pluck(:uid)).count == news.size
+      news.each do |post|
+        unless News.exists?(uid: post[:uid])
+          post = add_timestamps(post, locale) if post[:category] == 'maintenance' && timestamps_supported?(locale)
+          News.create!(post)
+        end
+      end
+    end
+  end
+
   def format_time(time)
     Time.at(time).utc.strftime('%FT%TZ')
   end
 
-  def parse(page, locale, category)
-    if category == 'topics'
-      parse_topics(page, locale, category)
-    elsif category == 'developers'
-      parse_developers_blog(page, locale, category)
-    else
-      parse_news(page, locale, category)
-    end
-  end
-
-  def parse_news(page, locale, category)
-    page.css('li.news__list').reverse.map do |item|
-      uri = URI.parse("#{BASE_URL}#{item.at_css('a')['href']}")
+  def parse_news(page, locale)
+    news = page.css('li.news__list').map do |item|
+      link = item.at_css('a')
+      uri = URI.parse("#{BASE_URL}#{link['href']}")
       uri.host = "#{locale}.#{uri.host}"
       id = uri.to_s.split('/').last
       title = item.at_css('p').text.gsub(/\[.*\]/, '').strip
       time = item.css('script').text.scan(/\d+/).last.to_i
 
+      category = case(link['class'])
+                 when /ic__info/ then 'notices'
+                 when /ic__maintenance/ then 'maintenance'
+                 when /ic__update/ then 'updates'
+                 when /ic__obstacle/ then 'status'
+                 else raise ArgumentError.new("Unknown category for #{locale.upcase} news post #{id}: #{link['class']}")
+                 end
+
       { uid: id, url: uri.to_s, title: title, time: format_time(time), locale: locale, category: category }
     end
-  end
 
-  def parse_topics(page, locale, category)
-    page.css('li.news__list--topics').reverse.map do |item|
+    topics = page.css('li.news__list--topics').map do |item|
       uri = URI.parse("#{BASE_URL}#{item.at_css('p.news__list--title > a')['href']}")
       uri.host = "#{locale}.#{uri.host}"
       id = uri.to_s.split('/').last
@@ -91,19 +99,21 @@ module Lodestone
         .join.gsub('  ', "\n\n").strip
 
       { uid: id, url: uri.to_s, title: title, time: format_time(time), image: image, description: description,
-        locale: locale, category: category }
+        locale: locale, category: 'topics' }
     end
+
+    news + topics
   end
 
-  def parse_developers_blog(page, locale, category)
-    page.css('entry').reverse.map do |entry|
+  def parse_blog(page, locale)
+    page.css('entry').map do |entry|
       url = entry.at_css('link')['href']
       id = entry.at_css('id').text
       title = entry.at_css('title').text.strip
       time = entry.at_css('published').text
       description = entry.css('content > p').first(2).map { |p| p.text.strip }.reject(&:empty?).join("\n\n")
 
-      { uid: id, url: url, title: title, time: time, description: description, locale: locale, category: category }
+      { uid: id, url: url, title: title, time: time, description: description, locale: locale, category: 'developers' }
     end
   end
 end

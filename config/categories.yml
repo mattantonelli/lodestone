@@ -1,6 +1,5 @@
 topics:
   name: 'Topics'
-  url:  'https://finalfantasyxiv.com/lodestone/topics'
   link: 'https://finalfantasyxiv.com/lodestone/topics'
   icon: 'https://lodestonenews.com/images/topics.png'
   thumbnail: 'https://lodestonenews.com/images/thumbnail.png'
@@ -8,35 +7,30 @@ topics:
 
 notices:
   name: 'Notices'
-  url:  'https://finalfantasyxiv.com/lodestone/news/category/1'
   link: 'https://finalfantasyxiv.com/lodestone/news/category/1'
   icon: 'https://lodestonenews.com/images/notices.png'
   color: 13421772
 
 maintenance:
   name: 'Maintenance'
-  url:  'https://finalfantasyxiv.com/lodestone/news/category/2'
   link: 'https://finalfantasyxiv.com/lodestone/news/category/2'
   icon: 'https://lodestonenews.com/images/maintenance.png'
   color: 13413161
 
 updates:
   name: 'Updates'
-  url:  'https://finalfantasyxiv.com/lodestone/news/category/3'
   link: 'https://finalfantasyxiv.com/lodestone/news/category/3'
   icon: 'https://lodestonenews.com/images/updates.png'
   color: 7051581
 
 status:
   name: 'Status'
-  url:  'https://finalfantasyxiv.com/lodestone/news/category/4'
   link: 'https://finalfantasyxiv.com/lodestone/news/category/4'
   icon: 'https://lodestonenews.com/images/status.png'
   color: 10042685
 
 developers:
   name: "Developers' Blog"
-  url:  'https://finalfantasyxiv.com/pr/blog/atom.xml'
   link: 'https://finalfantasyxiv.com/pr/blog/'
   icon: 'https://lodestonenews.com/images/developers.png'
   color: 6737151
