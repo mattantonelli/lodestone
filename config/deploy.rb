@@ -16,6 +16,10 @@ namespace :deploy do
     on roles(:app) do
       # Application credentials
       execute :ln, '-s', shared_path.join('master.key'), release_path.join('config/master.key')
+
+      # Persisted logs
+      execute :ln, '-s', shared_path.join("log/#{fetch(:rails_env)}.log"), release_path.join("log/#{fetch(:rails_env)}.log")
+      execute :ln, '-s', shared_path.join('log/whenever.log'), release_path.join('log/whenever.log')
     end
   end
 
