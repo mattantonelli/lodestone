@@ -54,7 +54,7 @@ class Webhook < ApplicationRecord
           raise ArgumentError.new("Received an unhandled Discord error code: #{response['code']}")
         end
       else
-        raise ArgumentError.new("Discord returned status #{e.response.code}. #{url}")
+        raise ArgumentError.new("Discord returned status #{e.response&.code || '???'}. #{url}")
         # Any response that isn't valid JSON is unparsable and should be retried
         # if (attempts += 1) <= 3
         #   sleep(3)
