@@ -30,8 +30,8 @@ class Webhook < ApplicationRecord
   end
 
   def send_embeds(embeds)
+    # NOTE: Re-sends are currently disabled since these messages seem to be coming through despite the errors
     # Attempt to send the embeds up to 3 times to accommodate for sporadic Discord 5XX errors
-    # NOTE: Disabling this since these messages seem to be coming through despite the errors
     # attempts = 0
 
     begin
@@ -54,7 +54,7 @@ class Webhook < ApplicationRecord
           raise ArgumentError.new("Received an unhandled Discord error code: #{response['code']}")
         end
       else
-        raise ArgumentError.new("Discord returned status #{e.response&.code || '???'}. #{url}")
+        raise ArgumentError.new("Discord returned status #{e.response&.code || '???'}.")
         # Any response that isn't valid JSON is unparsable and should be retried
         # if (attempts += 1) <= 3
         #   sleep(3)
