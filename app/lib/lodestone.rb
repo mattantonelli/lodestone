@@ -111,7 +111,7 @@ module Lodestone
       id = entry.at_css('id').text
       title = entry.at_css('title').text.strip
       time = entry.at_css('published').text
-      description = entry.css('content > p').first(2).map { |p| p.text.strip }.reject(&:empty?).join("\n\n")
+      description = entry.at_css('content').text.split(/\n\s?{2,}/).select(&:present?).first(2).map(&:strip).join("\n\n")
 
       { uid: id, url: url, title: title, time: time, description: description, locale: locale, category: 'developers' }
     end
