@@ -23,7 +23,7 @@ namespace :news do
 
     # Retrieve any unsent posts and deliver them
     begin
-      News.unsent.where(locale: locale).order(time: :desc).group_by(&:category).each do |category, news|
+      News.unsent.where(locale: locale).ordered.group_by(&:category).each do |category, news|
         if news.present?
           log("Found #{news.count} new posts for #{locale.upcase} #{category.capitalize} (#{news.pluck(:uid).join(', ')})")
 

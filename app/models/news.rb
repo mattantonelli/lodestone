@@ -28,9 +28,10 @@ class News < ApplicationRecord
     scope locale, -> { where(locale: locale) }
   end
 
-  scope :latest, -> { order(created_at: :desc).limit(20) }
-  scope :sent,   -> { where(sent: true) }
-  scope :unsent, -> { where(sent: false) }
+  scope :latest,  -> { ordered.limit(20) }
+  scope :ordered, -> { order(time: :desc) }
+  scope :sent,    -> { where(sent: true) }
+  scope :unsent,  -> { where(sent: false) }
 
   def embed
     link = URI.parse(Lodestone.category(category)['link'])

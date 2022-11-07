@@ -43,7 +43,7 @@ class NewsController < ApplicationController
     news = News.where(locale: @locale)
       .where('end_time >= ?', Time.now)
       .where.not(start_time: nil)
-      .order(created_at: :desc)
+      .ordered
 
     news.each do |post|
       case post.title.downcase
@@ -57,14 +57,14 @@ class NewsController < ApplicationController
   end
 
   def feed
-    @news = News.where(locale: @locale).order(created_at: :desc).first(@limit)
+    @news = News.where(locale: @locale).ordered.first(@limit)
     @include_category = true
     render 'basic'
   end
 
   def all
     @news = Lodestone.categories.each_with_object({}) do |category, h|
-      h[category] = News.where(locale: @locale, category: category).order(created_at: :desc).first(@limit)
+      h[category] = News.where(locale: @locale, category: category).ordered.first(@limit)
     end
   end
 
@@ -98,7 +98,7 @@ class NewsController < ApplicationController
   end
 
   def render_news
-    @news = News.where(locale: @locale, category: @category).order(created_at: :desc).first(@limit)
+    @news = News.where(locale: @locale, category: @category).ordered.first(@limit)
     render 'basic'
   end
 
