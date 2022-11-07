@@ -66,6 +66,47 @@ namespace :news do
     end
   end
 
+  desc 'Cache the news for a given locale and optional category without delivering it.'
+  task :cache, [:locale, :category, :pages] => [:environment] do |_, args|
+    locale, category, pages = args.values_at(:locale, :category, :pages)
+    break abort('You must provide a locale.') unless locale.present?
+
+    # Cache the first page of posts by default
+    # NOTE: This argument does not apply to the Developers' Blog
+    pages ||= 1
+
+    # If a category was provided, only fetch that one. Otherwise, fetch all categories.
+    if category.present?
+      categories = [category]
+    else
+      categories = Lodestone.categories
+    end
+
+    # Fetch the posts for each category and mark them as "sent"
+    categories.each do |cat|
+      posts = (1..pages.to_i).flat_map do |page|
+        Lodestone.fetch_category(category: cat, locale: locale, page: page)
+      end
+
+      posts.each { |post| post.update!(sent: true) }
+      puts "Cached #{posts.size} #{locale.upcase} #{cat.capitalize} posts"
+    end
+
+    # Update the metadata with the current fetch time so we can set the proper API cache headers
+    News.metadata(locale: locale).update(modified_at: Time.now.beginning_of_minute)
+  end
+
+  desc 'Reset the news metadata cache'
+  task reset_cache: :environment do
+    Lodestone.locales.each do |locale|
+      if meta = NewsMeta.find_by(locale: locale)
+        meta.update!(modified_at: Time.now, expires_at: Time.now)
+      else
+        NewsMeta.create!(locale: locale, modified_at: Time.now, expires_at: Time.now)
+      end
+    end
+  end
+
   def log(message)
     puts "[#{Time.now.strftime('%Y-%m-%d %H:%M:%S %Z')}] #{message}"
   end

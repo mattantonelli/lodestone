@@ -36,6 +36,28 @@ module Lodestone
     fetch_blog(locale: locale)
   end
 
+  def fetch_category(category:, locale:, page: 1)
+    if category == 'developers'
+      fetch_blog(locale: locale)
+    else
+      url = case category
+            when 'topics' then 'https://finalfantasyxiv.com/lodestone/topics'
+            when 'notices' then 'https://finalfantasyxiv.com/lodestone/news/category/1'
+            when 'maintenance' then 'https://finalfantasyxiv.com/lodestone/news/category/2'
+            when 'updates' then 'https://finalfantasyxiv.com/lodestone/news/category/3'
+            when 'status' then 'https://finalfantasyxiv.com/lodestone/news/category/4'
+      end
+
+      uri = URI.parse(url)
+      uri.host = "#{locale}.#{uri.host}"
+      uri.query = "page=#{page}"
+
+      page = Nokogiri::HTML(Net::HTTP.get_response(uri).body)
+      news = parse_news(page, locale) + parse_topics(page, locale)
+      create_posts(locale: locale, news: news)
+    end
+  end
+
   def self.categories
     CATEGORIES.to_h.keys.freeze
   end
@@ -51,8 +73,10 @@ module Lodestone
   private
   def create_posts(locale:, news:)
     # Don't bother checking for new posts if all of the UIDs already exist
-    unless News.where(uid: news.pluck(:uid)).count == news.size
-      news.each do |post|
+    if News.where(uid: news.pluck(:uid)).count == news.size
+      []
+    else
+      news.filter_map do |post|
         unless News.exists?(uid: post[:uid])
           post = add_timestamps(post, locale) if post[:category] == 'maintenance' && timestamps_supported?(locale)
           News.create!(post)
