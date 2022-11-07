@@ -40,15 +40,7 @@ module Lodestone
     if category == 'developers'
       fetch_blog(locale: locale)
     else
-      url = case category
-            when 'topics' then 'https://finalfantasyxiv.com/lodestone/topics'
-            when 'notices' then 'https://finalfantasyxiv.com/lodestone/news/category/1'
-            when 'maintenance' then 'https://finalfantasyxiv.com/lodestone/news/category/2'
-            when 'updates' then 'https://finalfantasyxiv.com/lodestone/news/category/3'
-            when 'status' then 'https://finalfantasyxiv.com/lodestone/news/category/4'
-      end
-
-      uri = URI.parse(url)
+      uri = URI.parse(CATEGORIES[category]['link'])
       uri.host = "#{locale}.#{uri.host}"
       uri.query = "page=#{page}"
 
