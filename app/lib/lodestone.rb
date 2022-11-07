@@ -16,7 +16,7 @@ module Lodestone
     uri.host = "#{locale}.#{uri.host}"
 
     page = Nokogiri::HTML(Net::HTTP.get_response(uri).body)
-    news = parse_news(page, locale)
+    news = parse_news(page, locale) + parse_topics(page, locale)
 
     create_posts(locale: locale, news: news)
   end
@@ -66,7 +66,7 @@ module Lodestone
   end
 
   def parse_news(page, locale)
-    news = page.css('li.news__list').map do |item|
+    page.css('li.news__list').map do |item|
       link = item.at_css('a')
       uri = URI.parse("#{BASE_URL}#{link['href']}")
       uri.host = "#{locale}.#{uri.host}"
@@ -84,8 +84,10 @@ module Lodestone
 
       { uid: id, url: uri.to_s, title: title, time: format_time(time), locale: locale, category: category }
     end
+  end
 
-    topics = page.css('li.news__list--topics').map do |item|
+  def parse_topics(page, locale)
+    page.css('li.news__list--topics').map do |item|
       uri = URI.parse("#{BASE_URL}#{item.at_css('p.news__list--title > a')['href']}")
       uri.host = "#{locale}.#{uri.host}"
       id = uri.to_s.split('/').last
@@ -101,8 +103,6 @@ module Lodestone
       { uid: id, url: uri.to_s, title: title, time: format_time(time), image: image, description: description,
         locale: locale, category: 'topics' }
     end
-
-    news + topics
   end
 
   def parse_blog(page, locale)
