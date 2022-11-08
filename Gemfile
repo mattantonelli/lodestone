@@ -3,16 +3,17 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby '3.1.0'
 
-gem 'rails', '~> 6.1.4', '>= 6.1.4.1'
+gem 'rails', '~> 6.1.4', '>= 6.1.5.1'
 gem 'mysql2', '~> 0.5'
 gem 'sass-rails'
+gem 'rack', '>= 2.2.3.1'
 gem 'rack-cors'
 gem 'jbuilder', '~> 2.7'
 gem 'bootsnap', '>= 1.4.4', require: false
 gem 'lograge'
 gem 'whenever', require: false
 gem 'rest-client'
-gem 'nokogiri', '>= 1.13.2'
+gem 'nokogiri', '>= 1.13.6'
 gem 'tzinfo'
 gem 'bootstrap', '~> 4.3.1'
 gem 'mime-types-data', '3.2021.1115' # TODO: See https://github.com/mime-types/mime-types-data/pull/50

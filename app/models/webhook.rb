@@ -30,8 +30,9 @@ class Webhook < ApplicationRecord
   end
 
   def send_embeds(embeds)
+    # NOTE: Re-sends are currently disabled since these messages seem to be coming through despite the errors
     # Attempt to send the embeds up to 3 times to accommodate for sporadic Discord 5XX errors
-    attempts = 0
+    # attempts = 0
 
     begin
       body = { embeds: embeds }.to_json
@@ -42,9 +43,9 @@ class Webhook < ApplicationRecord
         sleep(response.headers[:x_ratelimit_reset_after].to_f)
       end
     rescue RestClient::ExceptionWithResponse => e
-      if e.response&.headers[:content_type] == 'application/json'
+      if e.response&.headers&.dig(:content_type) == 'application/json'
         # Check the Discord error code for valid JSON responses and handle appropriately
-        response = JSON.parse(e.response)
+        response = JSON.parse(e.response.body)
 
         if response['code'] == 10015
           # Webhook has been deleted from the channel, so delete it from the database
@@ -53,13 +54,14 @@ class Webhook < ApplicationRecord
           raise ArgumentError.new("Received an unhandled Discord error code: #{response['code']}")
         end
       else
+        raise ArgumentError.new("Discord returned status #{e.response&.code || '???'}.")
         # Any response that isn't valid JSON is unparsable and should be retried
-        if (attempts += 1) <= 3
-          sleep(3)
-          retry
-        else
-          raise ArgumentError.new('Discord server error.')
-        end
+        # if (attempts += 1) <= 3
+        #   sleep(3)
+        #   retry
+        # else
+        #   raise ArgumentError.new('Discord server error.')
+        # end
       end
     end
   end

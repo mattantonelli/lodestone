@@ -23,14 +23,14 @@ Rails.application.routes.draw do
     end
   end
 
+  get 'docs', to: redirect('https://documenter.getpostman.com/view/1779678/TzXzDHVk')
+
   # 404 for unknown API routes
   match 'news/*path', via: :all, to: -> (_) { [404, { 'Content-Type' => 'application/json' },
                                               ['{"status": 404, "error": "Not found"}'] ] }
 
   # 404 for all other unknown routes
   match '*path', via: :all, to: redirect('/')
-
-  get 'docs', to: redirect('https://documenter.getpostman.com/view/1779678/TzXzDHVk')
 
   root 'static#index'
 end
