@@ -45,8 +45,6 @@ discord:
   production:
     client_id: 234567890
     client_secret: def456
-google_analytics:
-  tracking_id: UA-1234567-8
 ```
 
 #### Load the database

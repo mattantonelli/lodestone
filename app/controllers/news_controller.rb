@@ -1,12 +1,9 @@
 class NewsController < ApplicationController
   skip_before_action :set_locale # Do not set the locale cookie for API calls
 
-  before_action :set_defaults, :set_headers, :track_request
+  before_action :set_defaults, :set_headers
   before_action :check_freshness, except: [:post]
   before_action :render_news, only: [:topics, :notices, :maintenance, :updates, :status, :developers]
-
-  GA_URL = 'www.google-analytics.com/collect'.freeze
-  GA_TID = Rails.application.credentials.dig(:google_analytics, :tracking_id).freeze
 
   def topics
   end
@@ -104,12 +101,5 @@ class NewsController < ApplicationController
 
   def render_not_found
     render json: { status: 404, error: 'Not found' }, status: :not_found
-  end
-
-  def track_request
-    if Rails.env.production? && GA_TID.present?
-      RestClient.post(GA_URL, { v: 1, tid: GA_TID, cid: Digest::MD5.hexdigest(request.remote_ip),
-                                t: 'pageview', dp: request.fullpath })
-    end
   end
 end

@@ -7,8 +7,4 @@ module ApplicationHelper
     when /alert/   then 'alert-warning'
     end
   end
-
-  def ga_tid
-    Rails.application.credentials.dig(:google_analytics, :tracking_id)
-  end
 end
