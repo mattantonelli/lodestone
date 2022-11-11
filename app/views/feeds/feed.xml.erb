@@ -19,8 +19,12 @@
     <% @news.each do |post| %>
       <item>
         <title><%= post.title %></title>
-        <category><%= post.category %></category>
-        <description><%= post.description %></description>
+        <category><%= post.category.capitalize %></category>
+        <% if post.category == 'maintenance' %>
+          <description><%= maintenance_description(post) %></description>
+        <% else %>
+          <description><%= post.description %></description>
+        <% end %>
         <% if post.category == 'topics' %>
           <enclosure url="<%= post.image %>" type="image/png" length="0" />
         <% end %>
