@@ -7,8 +7,4 @@ module FeedsHelper
     else action_name
     end
   end
-
-  def feed_title
-    "#{action_name.upcase} Lodestone News"
-  end
 end
