@@ -11,10 +11,10 @@ namespace :news do
     begin
       Lodestone.fetch_all(locale: locale)
     rescue OpenURI::HTTPError => e
-      return log("Error contacting the Lodestone: #{e.to_s}")
+      abort log("Error contacting the Lodestone: #{e.to_s}")
     rescue RuntimeError => e
       # Lodestone is undergoing maintenance which results in a redirect
-      return log("Error contacting the Lodestone: #{e.to_s}")
+      abort log("Error contacting the Lodestone: #{e.to_s}")
     rescue StandardError => e
       log("Fatal error fetching news: #{e.to_s}")
       e.backtrace.first(5) { |line| log(line) }
