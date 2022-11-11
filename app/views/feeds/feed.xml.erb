@@ -23,7 +23,7 @@
         <% if post.category == 'maintenance' %>
           <description><%= maintenance_description(post) %></description>
         <% else %>
-          <description><%= post.description %></description>
+            <description><%= post.description&.gsub("\n", '<br>') %></description>
         <% end %>
         <% if post.category == 'topics' %>
           <enclosure url="<%= post.image %>" type="image/png" length="0" />

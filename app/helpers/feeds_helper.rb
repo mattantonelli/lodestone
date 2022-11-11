@@ -12,12 +12,12 @@ module FeedsHelper
     if post.start_time.present?
       case action_name
       when 'na'
-        "#{format_time(post, 'America/Los_Angeles')}\n" \
+        "#{format_time(post, 'America/Los_Angeles')}<br>" \
           "#{format_time(post, 'America/New_York')}"
       when 'eu'
         description = format_time(post, 'GMT')
-        description += "\n#{format_time(post, 'Europe/London')}" if TZInfo::Timezone.get('Europe/London').dst?
-        description += "\n#{format_time(post, 'Australia/Melbourne')}"
+        description += "<br>#{format_time(post, 'Europe/London')}" if TZInfo::Timezone.get('Europe/London').dst?
+        description += "<br>#{format_time(post, 'Australia/Melbourne')}"
         description
       when 'de'
         format_time(post, 'Europe/Berlin')
