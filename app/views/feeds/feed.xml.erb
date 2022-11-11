@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <atom:link href="<%= request.url %>" rel="self" type="application/rss+xml" />
+    <title><%= feed_title %></title>
+    <link><%= root_url %></link>
+    <description>Unofficial RSS feed for Final Fantasy XIV Lodestone news</description>
+    <category>News</category>
+    <language><%= feed_language %></language>
+    <lastBuildDate><%= @news.last.time.rfc822 %></lastBuildDate>
+    <pubDate><%= @meta.modified_at.rfc822 %></pubDate>
+    <image>
+      <url><%= image_url('logo.png', skip_pipeline: true) %></url>
+      <title><%= feed_title %></title>
+      <link><%= root_url %></link>
+      <width>48</width>
+      <height>48</height>
+    </image>
+    <% @news.each do |post| %>
+      <item>
+        <title><%= post.title %></title>
+        <category><%= post.category %></category>
+        <description><%= post.description %></description>
+        <% if post.category == 'topics' %>
+          <enclosure url="<%= post.image %>" type="image/png" length="0" />
+        <% end %>
+        <guid><%= post.url %></guid>
+        <link><%= post.url %></link>
+        <pubDate><%= post.time.rfc822 %></pubDate>
+      </item>
+    <% end %>
+  </channel>
+</rss>

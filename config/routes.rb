@@ -1,6 +1,12 @@
 Rails.application.routes.draw do
   get 'locale/set', to: 'locale#update'
 
+  resource :feed, only: [], defaults: { format: :xml } do
+    Lodestone.locales.each do |locale|
+      get locale
+    end
+  end
+
   resource :webhook, only: [] do
     post 'subscribe'
     get 'save'
