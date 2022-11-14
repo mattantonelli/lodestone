@@ -1,28 +1,36 @@
-a.discord {
+.discord {
   background-color: #3D55A0;
+
+  &:hover {
+    background-color: #324682;
+  }
 }
 
-a.discord:hover {
-  background-color: #324682;
-}
-
-a.github {
+.github {
   background-color: #888;
+
+  &:hover {
+    background-color: #666;
+  }
 }
 
-a.github:hover {
-  background-color: #666;
-}
-
-a.patreon {
+.patreon {
   background-color: #DB4534;
+
+  &:hover {
+    background-color: #BF3C2D;
+  }
 }
 
-a.patreon:hover {
-  background-color: #BF3C2D;
+.rss {
+  background-color: #F26000;
+
+  &:hover {
+    background-color: #D85600;
+  }
 }
 
-img.discord, img.patreon, img.github {
+img.social {
   width: 25px;
   height: 25px;
   opacity: 0.9;

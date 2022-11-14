@@ -11,15 +11,19 @@ en:
     github: "API Documentation"
     patreon: "Support on Patreon"
   subscribe:
+    application: "For Your Application"
     categories: "Categories"
+    discord: "For Your Discord Server"
     error:
       select_one: "You must select at least one category."
       unknown: "Sorry, there was a problem with your subscription."
+    integration: "Create a custom integration with a RESTful JSON API:"
     permission: "This requires the <b>Manage Webhooks</b> permission."
     preferences: "Choose your preferences"
     region: "Region"
+    rss: "For Your RSS Feed"
     submit: "Subscribe"
     success:
       flash: "You are now subscribed to Lodestone News updates."
       message: "Lodestone News updates will now be posted in this channel."
-    title: "Automatic Lodestone News updates for your Discord server!"
+    title: "FFXIV Lodestone News"

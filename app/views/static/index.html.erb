@@ -1,7 +1,7 @@
 <h2 class="text-center mt-2"><%= t('subscribe.title') %></h2>
 
 <div class="row mt-3">
-  <div class="col-12 col-md-8 offset-md-2 col-lg-6 offset-lg-3">
+  <div class="col-12">
     <div class="d-flex justify-content-center">
       <% %w(en fr de).each do |locale| %>
         <%= link_to locale_set_path(locale: locale), class: 'mx-2' do %>
@@ -9,9 +9,13 @@
         <% end %>
       <% end %>
     </div>
-    <div class="card mt-3">
+  </div>
+</div>
+<div class="row">
+  <div class="col-12 col-lg-5 offset-lg-1">
+    <div class="card shadow mt-3">
       <div class="card-header">
-        <h5 class="mb-0"><%= t('subscribe.preferences') %></h5>
+        <h5 class="mb-0"><%= t('subscribe.discord') %></h5>
       </div>
       <div class="card-body">
         <%= form_with(url: subscribe_webhook_path, local: true, class: 'form') do |f| %>
@@ -29,10 +33,41 @@
             <% end %>
           </div>
           <div class="text-center">
-            <%= f.submit t('subscribe.submit'), class: 'btn btn-primary' %>
+            <%= f.submit t('subscribe.submit'), class: 'btn discord' %>
             <p class="my-2"><%= t('subscribe.permission').html_safe %></p>
           </div>
         <% end %>
+      </div>
+    </div>
+  </div>
+  <div class="col-12 col-lg-5">
+    <div class="d-flex flex-column">
+      <div class="card shadow mt-3">
+        <div class="card-header">
+          <h5 class="mb-0"><%= t('subscribe.rss') %></h5>
+        </div>
+        <div class="card-body pb-3">
+          <%= form_with(url: subscribe_feed_path, local: true, class: 'form') do |f| %>
+            <div class="form-group">
+              <%= f.label :locale, t('subscribe.region') %>
+              <%= f.select :locale, locale_options(cookies[:locale]), {}, class: 'form-control' %>
+            </div>
+            <div class="text-center">
+              <%= f.submit t('subscribe.submit'), class: 'btn rss' %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+    <div class="card shadow mt-3">
+      <div class="card-header">
+        <h5 class="mb-0"><%= t('subscribe.application') %></h5>
+      </div>
+      <div class="card-body pb-3">
+        <p><%= t('subscribe.integration') %></p>
+        <div class="text-center">
+          <%= link_to t('social.github'), docs_path, class: 'btn github', target: '_blank' %>
+        </div>
       </div>
     </div>
   </div>
@@ -42,7 +77,6 @@
   <div class="col-12">
     <div class="text-center">
       <%= link_to t('social.discord'), 'https://discord.gg/UG3bDKawfJ', class: 'btn discord mt-2', target: '_blank' %>
-      <%= link_to t('social.github'), docs_path, class: 'btn github mt-2', target: '_blank' %>
       <%= link_to t('social.patreon'), 'https://www.patreon.com/raelys', class: 'btn patreon mt-2', target: '_blank' %>
     </div>
   </div>

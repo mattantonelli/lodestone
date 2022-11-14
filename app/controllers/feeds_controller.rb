@@ -1,5 +1,5 @@
 class FeedsController < ApplicationController
-  before_action :set_headers, :check_freshness, :render_feed
+  before_action :set_headers, :check_freshness, :render_feed, except: :subscribe
 
   def na
   end
@@ -14,6 +14,10 @@ class FeedsController < ApplicationController
   end
 
   def jp
+  end
+
+  def subscribe
+    redirect_to "/feed/#{params[:locale]}.xml"
   end
 
   private

@@ -11,15 +11,19 @@ fr:
     github: "Documentation de l'API"
     patreon: "Soutien via Patreon"
   subscribe:
+    application: "Pour votre application"
     categories: "Catégories"
+    discord: "Pour votre serveur Discord"
     error:
       select_one: "Vous devez sélectionner au moins une catégorie."
       unknown: "Un problème est survenu lors de votre abonnement."
+    integration: "Créer une intégration personnalisée avec une API JSON RESTful :"
     permission: "Ceci requiert la permission via le <b>paramétrage des Webhooks</b>."
     preferences: "Choisissez vos préférences"
     region: "Région"
+    rss: "Pour votre flux RSS"
     submit: "Abonnement"
     success:
       flash: "Vous êtes maintenant abonné aux actualités Lodestone. Hourra !"
       message: "Les actualités Lodestones vont maintenant être postées sur ce canal."
-    title: "L'actualité Lodestone en temps réel sur votre serveur Discord!"
+    title: "L'actualité FFXIV Lodestone"

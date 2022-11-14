@@ -5,6 +5,8 @@ Rails.application.routes.draw do
     Lodestone.locales.each do |locale|
       get locale
     end
+
+    post 'subscribe'
   end
 
   resource :webhook, only: [] do
