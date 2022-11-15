@@ -21,7 +21,7 @@ fr:
     permission: "Ceci requiert la permission via le <b>paramétrage des Webhooks</b>."
     preferences: "Choisissez vos préférences"
     region: "Région"
-    rss: "Pour votre flux RSS"
+    rss: "Pour votre agrégateur RSS"
     submit: "Abonnement"
     success:
       flash: "Vous êtes maintenant abonné aux actualités Lodestone. Hourra !"

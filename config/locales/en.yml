@@ -21,7 +21,7 @@ en:
     permission: "This requires the <b>Manage Webhooks</b> permission."
     preferences: "Choose your preferences"
     region: "Region"
-    rss: "For Your RSS Feed"
+    rss: "For Your RSS Reader"
     submit: "Subscribe"
     success:
       flash: "You are now subscribed to Lodestone News updates."

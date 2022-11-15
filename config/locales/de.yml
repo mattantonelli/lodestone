@@ -21,7 +21,7 @@ de:
     permission: "Dafür brauchst du die <b>Manage Webhooks</b> Rechte."
     preferences: "Wähle deine Präferenzen"
     region: "Region"
-    rss: "Für deinen RSS Feed"
+    rss: "Für deinen RSS Reader"
     submit: "Abonniere"
     success:
       flash: "Du hast nun die Lodestone News Updates abonniert."
