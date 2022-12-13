@@ -5,7 +5,7 @@ module Lodestone
 
   BASE_URL = 'https://finalfantasyxiv.com'.freeze
   LODESTONE_URL = 'https://finalfantasyxiv.com/lodestone'.freeze
-  DEVELOPERS_URL = 'https://finalfantasyxiv.com/pr/blog/atom.xml'.freeze
+  DEVELOPERS_URL = 'https://finalfantasyxiv.com/blog/atom.xml'.freeze
   CATEGORIES = YAML.load_file('config/categories.yml').freeze
   LOCALES = %w(na eu fr de jp).freeze
 
@@ -25,7 +25,7 @@ module Lodestone
     uri = URI.parse(DEVELOPERS_URL)
     uri.host = "#{locale}.#{uri.host}"
 
-    page = Nokogiri::HTML(URI.open(uri))
+    page = Nokogiri::HTML(Net::HTTP.get_response(uri).body)
     news = parse_blog(page, locale)
 
     create_posts(locale: locale, news: news)
@@ -127,7 +127,8 @@ module Lodestone
       id = entry.at_css('id').text
       title = entry.at_css('title').text.strip
       time = entry.at_css('published').text
-      description = entry.at_css('content').text.split(/\n\s?{2,}/).select(&:present?).first(2).map(&:strip).join("\n\n")
+      description = entry.at_css('content').text.gsub('<![CDATA[', '').split(/\n\s?{2,}/).select(&:present?)
+        .first(2).map(&:strip).join("\n\n")
 
       { uid: id, url: url, title: title, time: time, description: description, locale: locale, category: 'developers' }
     end
