@@ -6,7 +6,7 @@ ruby '3.1.0'
 gem 'rails', '~> 6.1.4', '>= 6.1.7.1'
 gem 'mysql2', '~> 0.5'
 gem 'sass-rails'
-gem 'rack', '>= 2.2.6.2'
+gem 'rack', '>= 2.2.6.3'
 gem 'rack-cors'
 gem 'jbuilder', '~> 2.7'
 gem 'bootsnap', '>= 1.4.4', require: false
