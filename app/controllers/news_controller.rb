@@ -1,8 +1,8 @@
 class NewsController < ApplicationController
   skip_before_action :set_locale # Do not set the locale cookie for API calls
 
-  before_action :set_defaults, :set_headers
-  before_action :check_freshness, except: [:post]
+  before_action :set_defaults
+  before_action :set_headers, except: [:post]
   before_action :render_news, only: [:topics, :notices, :maintenance, :updates, :status, :developers]
 
   def topics
@@ -86,11 +86,9 @@ class NewsController < ApplicationController
   def set_headers
     meta = News.metadata(locale: @locale)
     expires_in(meta.max_age, must_revalidate: true, public: true)
-    response.set_header('Last-Modified', meta.modified_at)
-    response.set_header('Expires', meta.expires_at)
-  end
+    response.set_header('Expires', meta.expires_at.httpdate)
 
-  def check_freshness
+    # Set the Last-Modified header and respect the If-Modified-Since header, returning 304 if data is fresh
     fresh_when(last_modified: News.metadata(locale: @locale).modified_at)
   end
 
