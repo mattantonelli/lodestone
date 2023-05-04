@@ -87,7 +87,7 @@ module Lodestone
       uri = URI.parse("#{BASE_URL}#{link['href']}")
       uri.host = "#{locale}.#{uri.host}"
       id = uri.to_s.split('/').last
-      title = item.at_css('p').text.gsub(/\[.*\]/, '').strip
+      title = item.at_css('p').children.last.text.strip
       time = item.css('script').text.scan(/\d+/).last.to_i
 
       category = case(link['class'])
