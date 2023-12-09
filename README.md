@@ -7,8 +7,8 @@ Unofficial webhook service and REST API for the [Final Fantasy XIV Lodestone](ht
 All of this application's data is made available through a RESTful JSON API. See the [documentation](https://lodestonenews.com/docs) for details.
 
 ## Dependencies
-* Ruby (3.1.0)
-* Rails (6.1.4)
+* Ruby (3.1)
+* Rails (6.1)
 * MariaDB / MySQL
 
 ## Installation
