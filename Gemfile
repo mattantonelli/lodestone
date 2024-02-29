@@ -17,6 +17,7 @@ gem 'nokogiri', '>= 1.13.6'
 gem 'tzinfo'
 gem 'bootstrap', '~> 4.3.1'
 gem 'mime-types-data', '3.2021.1115' # TODO: See https://github.com/mime-types/mime-types-data/pull/50
+gem 'base64', '0.1.1' # Passenger requirement
 
 group :development do
   gem 'puma', '~> 5.0'
