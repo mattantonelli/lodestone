@@ -7,7 +7,7 @@ gem 'rails', '~> 6.1.7'
 gem 'mysql2', '~> 0.5'
 gem 'sass-rails'
 gem 'rack', '>= 2.2.6.3'
-gem 'rack-cors', '~> 2.0.1'
+gem 'rack-cors', '1.1.0'
 gem 'jbuilder', '~> 2.7'
 gem 'bootsnap', '>= 1.4.4', require: false
 gem 'lograge'
