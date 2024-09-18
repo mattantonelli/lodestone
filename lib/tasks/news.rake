@@ -1,5 +1,14 @@
 namespace :news do
-  desc 'Deliver the latest news to subscribed webhooks.'
+  desc 'Deliver the latest news to subscribed webhooks across all locales'
+  task :deliver_all => [:environment] do |_, args|
+    # Deliver to the locales with the least amount of subscriptions first
+    %w(jp de fr eu na).each do |locale|
+      Rake::Task['news:deliver'].invoke(locale)
+      Rake::Task['news:deliver'].reenable
+    end
+  end
+
+  desc 'Deliver the latest news to subscribed webhooks'
   task :deliver, [:locale] => [:environment] do |_, args|
     locale = args[:locale]
     break abort('You must provide a locale.') unless locale.present?
