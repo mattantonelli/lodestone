@@ -37,24 +37,17 @@ namespace :news do
         news.map(&:embed).each_slice(10).each do |embeds|
           # Collect the webhooks where the news should be sent. Shuffle them for fairness, and take them in
           # slices so we can multithread them for faster execution. Each webhook has its own rate limit.
-          Webhook.where(locale: locale, category => true).shuffle.each_slice(40) do |webhooks|
-            threads = webhooks.map do |webhook|
-              Thread.new do
-                begin
-                  webhook.send_embeds(embeds)
-                rescue JSON::ParserError
-                  log("Missed a delivery for #{locale.upcase} #{category.capitalize}. Discord server error.")
-                rescue ArgumentError => e
-                  log("Missed a delivery for #{locale.upcase} #{category.capitalize}. #{e.message}")
-                rescue StandardError => e
-                  log("Missed a delivery for #{locale.upcase} #{category.capitalize}")
-                  log_exception(e)
-                end
-              end
+          Webhook.where(locale: locale, category => true).shuffle.each do |webhook|
+            begin
+              webhook.send_embeds(embeds)
+            rescue JSON::ParserError
+              log("Missed a delivery for #{locale.upcase} #{category.capitalize}. Discord server error.")
+            rescue ArgumentError => e
+              log("Missed a delivery for #{locale.upcase} #{category.capitalize}. #{e.message}")
+            rescue StandardError => e
+              log("Missed a delivery for #{locale.upcase} #{category.capitalize}")
+              log_exception(e)
             end
-
-            # Wait for all of the threads before proceeding to the next slice
-            threads.map(&:join)
           end
         end
 
