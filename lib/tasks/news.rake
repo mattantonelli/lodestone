@@ -37,7 +37,7 @@ namespace :news do
         news.map(&:embed).each_slice(10).each do |embeds|
           # Collect the webhooks where the news should be sent. Shuffle them for fairness, and take them in
           # slices so we can multithread them for faster execution. Each webhook has its own rate limit.
-          Webhook.where(locale: locale, category => true).shuffle.each_slice(40) do |webhooks|
+          Webhook.where(locale: locale, category => true).shuffle.each_slice(10) do |webhooks|
             threads = webhooks.map do |webhook|
               Thread.new do
                 begin
