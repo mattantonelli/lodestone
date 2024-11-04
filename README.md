@@ -54,12 +54,12 @@ bundle exec bin/rake db:migrate
 
 ### Prime the news cache
 ```
-bin/rake news:cache[na,,10]
-bin/rake news:cache[eu,,10]
-bin/rake news:cache[de,,10]
-bin/rake news:cache[fr,,10]
-bin/rake news:cache[jp,,10]
 bin/rake news:reset_cache
+bin/rake news:cache[na]
+bin/rake news:cache[eu]
+bin/rake news:cache[de]
+bin/rake news:cache[fr]
+bin/rake news:cache[jp]
 ```
 
 #### Schedule jobs
