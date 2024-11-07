@@ -1,11 +1,12 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby '3.1.0'
+ruby '3.3.5'
 
-gem 'rails', '~> 6.1.7.9'
+gem 'rails', '~> 7.2.2'
 gem 'mysql2', '~> 0.5'
 gem 'sass-rails'
+gem 'sprockets-rails'
 gem 'rack', '>= 2.2.6.3'
 gem 'rack-cors', '1.1.0'
 gem 'jbuilder', '~> 2.7'
@@ -20,11 +21,11 @@ gem 'mime-types-data', '3.2021.1115' # TODO: See https://github.com/mime-types/m
 gem 'base64', '0.1.1' # Passenger requirement
 
 group :development do
-  gem 'puma', '~> 5.0'
+  gem 'puma'
   gem 'annotate'
-  gem 'web-console', '>= 4.1.0'
+  gem 'web-console'
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
-  gem 'listen', '~> 3.3'
+  gem 'listen'
   gem 'spring'
   gem 'i18n_yaml_sorter'
 

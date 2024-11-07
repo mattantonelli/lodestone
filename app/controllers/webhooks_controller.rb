@@ -3,7 +3,8 @@ class WebhooksController < ApplicationController
     state = encode_options
 
     if state.match?('1')
-      redirect_to Discord.authorize_url(state: encode_options, redirect_uri: save_webhook_url)
+      redirect_to(Discord.authorize_url(state: encode_options, redirect_uri: save_webhook_url),
+                  allow_other_host: true)
     else
       flash[:error] = I18n.t('subscribe.error.select_one')
       redirect_to root_path(locale: params[:locale])
