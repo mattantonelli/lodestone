@@ -58,6 +58,13 @@ Rails.application.configure do
   # want to log everything, set the level to "debug".
   config.log_level = ENV.fetch("RAILS_LOG_LEVEL", "info")
 
+  config.lograge.enabled = true
+
+  config.lograge.custom_options = lambda do |event|
+    params = event.payload[:params].except(*%i(controller action format id authenticity_token state code))
+    { params: params } if params.present?
+  end
+
   # Use a different cache store in production.
   # config.cache_store = :mem_cache_store
 
