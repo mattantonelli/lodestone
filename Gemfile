@@ -34,4 +34,6 @@ group :development do
   gem 'capistrano-bundler'
   gem 'capistrano-rbenv'
   gem 'capistrano-rails'
+  gem 'ed25519'
+  gem 'bcrypt_pbkdf'
 end
