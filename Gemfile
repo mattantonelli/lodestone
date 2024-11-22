@@ -17,8 +17,7 @@ gem 'rest-client'
 gem 'nokogiri', '>= 1.13.6'
 gem 'tzinfo'
 gem 'bootstrap', '~> 4.3.1'
-gem 'mime-types-data', '3.2021.1115' # TODO: See https://github.com/mime-types/mime-types-data/pull/50
-gem 'base64', '0.1.1' # Passenger requirement
+gem 'ostruct'
 
 group :development do
   gem 'puma'
@@ -30,7 +29,7 @@ group :development do
   gem 'i18n_yaml_sorter'
 
   # capistrano
-  gem 'capistrano', '3.16.0'
+  gem 'capistrano', '3.19.2'
   gem 'capistrano-bundler'
   gem 'capistrano-rbenv'
   gem 'capistrano-rails'

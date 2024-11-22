@@ -1,4 +1,4 @@
-lock "~> 3.16.0"
+lock '~> 3.19.2'
 
 set :application, 'lodestone'
 set :repo_url,    'https://github.com/mattantonelli/lodestone'
