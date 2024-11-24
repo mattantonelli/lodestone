@@ -70,7 +70,10 @@ module Lodestone
     else
       news.filter_map do |post|
         unless News.exists?(uid: post[:uid])
-          post = add_timestamps(post, locale) if post[:category] == 'maintenance' && timestamps_supported?(locale)
+          if post[:category] == 'maintenance' && timestamps_supported?(locale)
+            post = add_timestamps(post, locale)
+          end
+
           News.create!(post)
         end
       end

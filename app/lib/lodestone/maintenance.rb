@@ -1,4 +1,6 @@
 module Lodestone::Maintenance
+  require 'open-uri'
+
   extend self
 
   DATE_REGEX = {
