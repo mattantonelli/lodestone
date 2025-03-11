@@ -173,7 +173,7 @@ GEM
     net-ssh (7.3.0)
     netrc (0.11.0)
     nio4r (2.7.4)
-    nokogiri (1.16.7-x86_64-linux)
+    nokogiri (1.18.3-x86_64-linux-gnu)
       racc (~> 1.4)
     ostruct (0.6.1)
     popper_js (1.16.1)
@@ -182,7 +182,7 @@ GEM
     puma (6.4.3)
       nio4r (~> 2.0)
     racc (1.8.1)
-    rack (3.1.8)
+    rack (3.1.12)
     rack-cors (1.1.0)
       rack (>= 2.0.0)
     rack-session (2.0.0)
@@ -298,10 +298,10 @@ DEPENDENCIES
   listen
   lograge
   mysql2 (~> 0.5)
-  nokogiri (>= 1.13.6)
+  nokogiri (~> 1.18.3)
   ostruct
   puma
-  rack (>= 2.2.6.3)
+  rack (~> 3.1.12)
   rack-cors (= 1.1.0)
   rails (~> 7.2.2)
   rest-client
