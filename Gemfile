@@ -8,6 +8,7 @@ gem 'mysql2', '~> 0.5'
 gem 'sass-rails'
 gem 'sprockets-rails'
 gem 'rack', '~> 3.1.14'
+gem 'rack-session', '~> 2.1.1'
 gem 'rack-cors', '1.1.0'
 gem 'jbuilder', '~> 2.7'
 gem 'bootsnap', '>= 1.4.4', require: false
