@@ -47,7 +47,7 @@ class NewsController < ApplicationController
       when /companion/ then @maintenance[:companion] << post
       when /world|data center/ then @maintenance[:game] << post
       when /lodestone/ then @maintenance[:lodestone] << post
-      when /online store/ then @maintenance[:mog] << post
+      when /mog station|online store/ then @maintenance[:mog] << post
       when /psn/ then @maintenance[:psn] << post
       end
     end
