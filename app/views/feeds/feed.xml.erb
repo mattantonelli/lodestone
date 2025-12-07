@@ -7,7 +7,7 @@
     <description>Unofficial RSS feed for Final Fantasy XIV Lodestone news</description>
     <category>News</category>
     <language><%= feed_language %></language>
-    <lastBuildDate><%= @news.last.time.rfc822 %></lastBuildDate>
+    <lastBuildDate><%= @news.first.time.rfc822 %></lastBuildDate>
     <pubDate><%= @meta.modified_at.rfc822 %></pubDate>
     <image>
       <url><%= image_url('logo.png', skip_pipeline: true) %></url>
