@@ -1,6 +1,6 @@
 # Lodestone News
 
-Unofficial webhook service and REST API for the [Final Fantasy XIV Lodestone](https://na.finalfantasyxiv.com/lodestone/) written in Ruby on Rails. You can find the original Sinatra implementation [here](https://github.com/mattantonelli/lodestone-sinatra).
+Unofficial webhook service and REST API for the [Final Fantasy XIV Lodestone](https://na.finalfantasyxiv.com/lodestone/) written in Ruby on Rails. You can find the original Sinatra implementation [here](https://github.com/skyborn-industries/lodestone-sinatra).
 
 ## API
 
@@ -14,7 +14,7 @@ All of this application's data is made available through a RESTful JSON API. See
 ## Installation
 #### Clone and initialize the repository
 ```
-git clone https://github.com/mattantonelli/lodestone
+git clone https://github.com/skyborn-industries/lodestone
 cd lodestone
 bundle install
 ```
